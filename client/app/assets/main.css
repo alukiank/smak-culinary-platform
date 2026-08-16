@@ -1,0 +1,144 @@
+@import "tailwindcss";
+@import "@nuxt/ui";
+
+@theme {
+  --color-coral-50: #FFF5F5;
+  --color-coral-100: #FFE3E3;
+  --color-coral-200: #FFC9C9;
+  --color-coral-300: #FFA3A3;
+  --color-coral-400: #FF7D7D;
+  --color-coral-500: #F05B5B;
+  --color-coral-600: #D64545;
+  --color-coral-700: #B83232;
+  --color-coral-800: #992222;
+  --color-coral-900: #7A1616;
+  --color-coral-950: #520B0B;
+
+  --color-orange-50: #FFF8F3;
+  --color-orange-100: #FFEEDF;
+  --color-orange-200: #FFDCBF;
+  --color-orange-300: #FFC599;
+  --color-orange-400: #FFAA73;
+  --color-orange-500: #F7934C;
+  --color-orange-600: #DB7935;
+  --color-orange-700: #B55D21;
+  --color-orange-800: #8F4411;
+  --color-orange-900: #6E2E07;
+  --color-orange-950: #471A02;
+
+  --color-yellow-50: #FEFDF3;
+  --color-yellow-100: #FEFAE2;
+  --color-yellow-200: #FDF3B7;
+  --color-yellow-300: #FCEB8C;
+  --color-yellow-400: #FAE161;
+  --color-yellow-500: #F6CB45;
+  --color-yellow-600: #DBAA2B;
+  --color-yellow-700: #B5841B;
+  --color-yellow-800: #8F6110;
+  --color-yellow-900: #6E4607;
+  --color-yellow-950: #472A02;
+
+  --color-ai-indigo-50: #EEF2FF;
+  --color-ai-indigo-100: #E0E7FF;
+  --color-ai-indigo-200: #C7D2FE;
+  --color-ai-indigo-300: #A5B4FC;
+  --color-ai-indigo-400: #818CF8;
+  --color-ai-indigo-500: #6366F1;
+  --color-ai-indigo-600: #4F46E5;
+  --color-ai-indigo-700: #4338CA;
+  --color-ai-indigo-800: #3730A3;
+  --color-ai-indigo-900: #312E81;
+  --color-ai-indigo-950: #1E1B4B;
+
+  --color-smak-neutral-50: #F8F9FA;
+  --color-smak-neutral-100: #E9ECEF;
+  --color-smak-neutral-200: #DEE2E6;
+  --color-smak-neutral-300: #CED4DA;
+  --color-smak-neutral-400: #ADB5BD;
+  --color-smak-neutral-500: #6C757D;
+  --color-smak-neutral-600: #495057;
+  --color-smak-neutral-700: #454D5A;
+  --color-smak-neutral-800: #313744;
+  --color-smak-neutral-900: #242934;
+  --color-smak-neutral-950: #1A1D24;
+
+  --font-sans: "Manrope", sans-serif;
+  --font-heading: "Comfortaa", sans-serif;
+  --font-display: "Comfortaa", sans-serif;
+
+  --shadow-small: 0 0.125rem 0.5rem rgba(0, 0, 0, 0.04);
+  --shadow-hover: 0 0.5rem 1.5rem rgba(0, 0, 0, 0.08);
+
+  --radius-s: 0.5rem;
+  --radius-m: 1rem;
+  --radius-l: 1.5rem;
+
+  --animate-card-appear: card-appear 0.55s cubic-bezier(0.34, 1.56, 0.64, 1) both;
+
+  @keyframes card-appear {
+    from {
+      opacity: 0;
+      transform: scale(0.95);
+    }
+    to {
+      opacity: 1;
+      transform: scale(1);
+    }
+  }
+}
+
+@utility bg-brand-gradient {
+  background-image: linear-gradient(135deg, #F05B5B 0%, #F7934C 50%, #F6CB45 100%);
+}
+
+@utility transition-smooth {
+  transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+html {
+  height: 100%;
+}
+
+body {
+  height: 100%;
+  font-family: var(--font-sans);
+  background-color: #FFFFFF;
+  color: #1A1A1A;
+  -webkit-font-smoothing: antialiased;
+}
+
+html.dark body {
+  background-color: var(--color-smak-neutral-950);
+  color: var(--color-smak-neutral-50);
+}
+
+h1, h2, h3, h4, h5, h6, .font-heading {
+  font-family: var(--font-heading);
+}
+/* Hide all browser scrollbars globally while keeping overflow scrolling active */
+::-webkit-scrollbar {
+  display: none !important;
+  width: 0 !important;
+  height: 0 !important;
+}
+
+* {
+  scrollbar-width: none !important; /* Firefox */
+  -ms-overflow-style: none !important; /* IE/Edge */
+}
+
+.page-enter-active,
+.page-leave-active {
+  transition: all 0.1s ease-out;
+}
+
+.page-enter-from {
+  opacity: 0;
+  transform: translateY(10px);
+}
+
+.page-leave-to {
+  opacity: 0;
+  transform: translateY(-10px);
+}
+
