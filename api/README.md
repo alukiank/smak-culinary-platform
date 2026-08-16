@@ -1,4 +1,4 @@
-# SMAK — Backend Service
+# SMAK — Backend API
 
 This directory contains the core backend API for the SMAK culinary platform. It is built with NestJS and provides the application's business logic, real-time AI assistant streaming, vector similarity search, and asynchronous background processing.
 
@@ -168,42 +168,49 @@ Environment variables are configured via local `.env` files. Detailed descriptio
 
 ## Database & Migrations
 
-Database migrations are managed via **TypeORM CLI** configured in `typeorm.config.ts`.
+Database schema management is handled via **TypeORM CLI** configured in [`typeorm.config.ts`](typeorm.config.ts).
+
+### Migration Commands
 
 ```bash
-# Run pending migrations
+# Apply pending migrations (development via ts-node)
 npm run migration:run
 
-# Generate a new migration based on entity changes
+# Generate a new migration from entity changes
 npm run migration:generate -- src/infrastructure/database/migrations/YourMigrationName
 
-# Revert the latest migration
+# Revert the most recent migration
 npm run migration:revert
 
-# Run migrations against production build (dist)
+# Run migrations in production (compiled dist/ for Docker containers)
 npm run migration:run:prod
 ```
 
-### Dataset Import & Seeding Pipeline
+---
 
-This repository includes a dedicated interactive dataset importer ([`scripts/import-dataset.ts`](scripts/import-dataset.ts)) to populate the database with an initial catalog of culinary recipes.
+### Dataset & Seeding Pipeline
 
-#### Dataset Overview
-The importer is designed to consume a custom dataset consisting of:
-- **`recipes.json`**: A structured JSON array containing comprehensive recipe definitions (titles, step-by-step instructions, ingredients with measurements, prep/cook durations, dietary flags like vegan/gluten-free, taste profiles, cuisine tags, and healthiness metrics).
-- **Images Directory**: A folder containing the corresponding local image assets.
+The repository includes an interactive importer script ([`scripts/import-dataset.ts`](scripts/import-dataset.ts)) to populate the database with a catalog of culinary recipes and pre-computed vector embeddings.
 
-You can customize or extend `recipes.json` with your own recipes, dietary tags, or categories before running the import.
+#### 1. Obtain the Dataset
+To keep the Git repository lightweight, the full recipe dataset and media assets (~110 MB) are hosted on [GitHub Releases](https://github.com/alukiank/smak-culinary-platform/releases):
 
-#### What the Importer Handles Automatically
-When executed, the interactive script:
-1. **Path Resolution**: Auto-detects dataset files in standard locations or allows you to specify custom paths interactively.
-2. **Author Association**: Lets you assign imported recipes to an existing Admin account or creates a new Admin author on the fly.
-3. **Media Upload to Cloudinary**: Uploads local cover photos to Cloudinary CDN and links the resulting secure URLs to each recipe record.
-4. **Vector Embedding Generation**: Calls the Google Gemini Embedding API (`gemini-embedding-001`) to compute 768-dimensional vector representations for each recipe, storing them in PostgreSQL via `pgvector` for instant semantic similarity search.
-5. **Database Insertion**: Inserts normalized recipe records with published status, zeroed initial reviews, and indexed category relations.
+- **Download**: Get `smak-dataset.zip` from the latest [Release](https://github.com/alukiank/smak-culinary-platform/releases).
+- **Extract**: Unpack the archive into the project root directory:
+  - `dataset/recipes.json` — Structured JSON array with recipes (ingredients, step-by-step instructions, prep/cook durations, dietary flags, and taste profiles).
+  - `dataset/images/` — Recipe cover photos for initial CDN upload.
 
-#### Running the Import
+> **Note**: You can inspect or extend `recipes.json` with custom recipes prior to importing.
+
+#### 2. Automated Import Pipeline
+When executed, the script automatically performs:
+- **Path Detection**: Locates `dataset/recipes.json` automatically or prompts for custom paths.
+- **Admin Assignment**: Associates imported recipes with an existing Admin account or creates a new one.
+- **Cloudinary CDN Upload**: Uploads local cover photos to Cloudinary and attaches the generated URLs.
+- **Vector Embedding Generation**: Calls the Google Gemini Embedding API (`gemini-embedding-001`) to generate 768-dimensional vector representations for `pgvector` semantic search.
+- **Database Persistence**: Inserts normalized recipe records with published statuses, zeroed initial reviews, and indexed category relations.
+
+#### 3. Run the Importer
 ```bash
 npm run import:dataset
 ```

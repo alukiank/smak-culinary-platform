@@ -55,13 +55,11 @@ const { data: recipe, pending: recipeLoading, error: recipeError, refresh } = aw
   () => fetchRecipeById(recipeId.value)
 )
 
-// Cook Mode: smooth scroll to ingredients & directions on page
+// Smooth scroll to ingredients & directions on page
 const startCooking = () => {
   const el = document.getElementById('recipe-cooking')
   if (el) {
     el.scrollIntoView({ behavior: 'smooth' })
-  } else if (recipe.value) {
-    navigateTo(`/recipes/cook/${recipe.value.id}`)
   }
 }
 

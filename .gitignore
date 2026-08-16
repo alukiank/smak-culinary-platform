@@ -27,3 +27,9 @@
 **/.idea/
 .DS_Store
 Thumbs.db
+
+# ======================================
+# Datasets & Large Archives
+# ======================================
+dataset/
+*.zip

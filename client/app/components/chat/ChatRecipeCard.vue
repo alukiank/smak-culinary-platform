@@ -37,7 +37,7 @@ const difficultyColor: Record<string, string> = {
 const handleCookClick = (e: Event) => {
   e.stopPropagation()
   e.preventDefault()
-  router.push(`/recipes/cook/${props.recipe.id}`)
+  router.push(`/recipes/${props.recipe.id}`)
 }
 </script>
 
