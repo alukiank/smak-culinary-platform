@@ -1,0 +1,113 @@
+name: smak-culinary-platform-prod
+
+services:
+  db:
+    image: pgvector/pgvector:pg16
+    container_name: smak_culinary_platform_db_prod
+    ports:
+      - '${DB_PORT:-5433}:5432'
+    env_file:
+      - .env.prod
+    environment:
+      POSTGRES_USER: ${DB_USER:-admin}
+      POSTGRES_PASSWORD: ${DB_PASSWORD:-123456qQ}
+      POSTGRES_DB: ${DB_NAME:-cooking_catalog_db}
+    volumes:
+      - smak_culinary_platform_data_prod:/var/lib/postgresql/data
+    networks:
+      - smak_culinary_platform_network_prod
+    healthcheck:
+      test: ['CMD-SHELL', 'pg_isready -U ${DB_USER:-admin} -d ${DB_NAME:-cooking_catalog_db}']
+      interval: 5s
+      timeout: 5s
+      retries: 5
+    restart: always
+
+  redis:
+    image: redis:7-alpine
+    container_name: smak_culinary_platform_redis_prod
+    ports:
+      - '6379:6379'
+    networks:
+      - smak_culinary_platform_network_prod
+    healthcheck:
+      test: ['CMD', 'redis-cli', 'ping']
+      interval: 5s
+      timeout: 5s
+      retries: 5
+    restart: always
+
+  api:
+    build:
+      context: ./api
+      dockerfile: Dockerfile
+      target: production
+    container_name: smak_culinary_platform_api_prod
+    depends_on:
+      db:
+        condition: service_healthy
+      redis:
+        condition: service_healthy
+    env_file:
+      - ./api/.env.prod
+    environment:
+      DB_HOST: db
+      DB_PORT: 5432
+      REDIS_HOST: redis
+      REDIS_PORT: 6379
+    networks:
+      - smak_culinary_platform_network_prod
+    restart: always
+
+  client:
+    build:
+      context: ./client
+      dockerfile: Dockerfile
+      target: production
+      args:
+        NUXT_PUBLIC_API_URL: ${NUXT_PUBLIC_API_URL:-https://api.localhost}
+    container_name: smak_culinary_platform_client_prod
+    depends_on:
+      api:
+        condition: service_started
+    env_file:
+      - ./client/.env.prod
+    environment:
+      NUXT_API_URL_INTERNAL: http://api:4000
+    networks:
+      - smak_culinary_platform_network_prod
+    restart: always
+
+  proxy:
+    image: caddy:2.9-alpine
+    container_name: smak_culinary_platform_proxy_prod
+    ports:
+      - '80:80'
+      - '443:443'
+      - '443:443/udp'
+    volumes:
+      - ./Caddyfile:/etc/caddy/Caddyfile:ro
+      - caddy_data_prod:/data
+      - caddy_config_prod:/config
+    env_file:
+      - .env.prod
+    environment:
+      DOMAIN: ${DOMAIN:-localhost}
+      API_DOMAIN: ${API_DOMAIN:-api.localhost}
+      FRONTEND_ORIGIN: ${FRONTEND_URL:-https://localhost}
+      CADDY_EMAIL: ${CADDY_EMAIL:-admin@localhost}
+    depends_on:
+      - api
+      - client
+    networks:
+      - smak_culinary_platform_network_prod
+    restart: always
+
+networks:
+  smak_culinary_platform_network_prod:
+    driver: bridge
+
+volumes:
+  smak_culinary_platform_data_prod:
+  caddy_data_prod:
+  caddy_config_prod:

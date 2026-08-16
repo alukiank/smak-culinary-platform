@@ -1,0 +1,41 @@
+name: smak-culinary-platform
+
+services:
+  db:
+    image: pgvector/pgvector:pg16
+    container_name: smak_culinary_platform_db
+    ports:
+      - '${DB_PORT:-5433}:5432'
+    environment:
+      POSTGRES_USER: ${DB_USER:-admin}
+      POSTGRES_PASSWORD: ${DB_PASSWORD:-123456qQ}
+      POSTGRES_DB: ${DB_NAME:-cooking_catalog_db}
+    volumes:
+      - smak_culinary_platform_data:/var/lib/postgresql/data
+    networks:
+      - smak_culinary_platform_network
+    healthcheck:
+      test: ['CMD-SHELL', 'pg_isready -U ${DB_USER:-admin} -d ${DB_NAME:-cooking_catalog_db}']
+      interval: 5s
+      timeout: 5s
+      retries: 5
+
+  redis:
+    image: redis:7-alpine
+    container_name: smak_culinary_platform_redis
+    ports:
+      - '6379:6379'
+    networks:
+      - smak_culinary_platform_network
+    healthcheck:
+      test: ['CMD', 'redis-cli', 'ping']
+      interval: 5s
+      timeout: 5s
+      retries: 5
+
+networks:
+  smak_culinary_platform_network:
+    driver: bridge
+
+volumes:
+  smak_culinary_platform_data:

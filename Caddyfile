@@ -1,0 +1,32 @@
+{
+	email {$CADDY_EMAIL:admin@example.com}
+}
+
+{$API_DOMAIN:api.localhost} {
+	@cors_preflight method OPTIONS
+
+	# Handle CORS preflight requests before they hit NestJS
+	handle @cors_preflight {
+		header Access-Control-Allow-Origin {$FRONTEND_ORIGIN:https://localhost}
+		header Access-Control-Allow-Methods "GET, POST, PUT, PATCH, DELETE, OPTIONS"
+		header Access-Control-Allow-Headers "Content-Type, Authorization, Cookie"
+		header Access-Control-Allow-Credentials "true"
+		header Access-Control-Max-Age "86400"
+		respond "" 204
+	}
+
+	# Proxy all other requests to NestJS API
+	reverse_proxy api:4000 {
+		flush_interval -1
+	}
+
+	# Add CORS headers to all proxied responses
+	header {
+		Access-Control-Allow-Origin {$FRONTEND_ORIGIN:https://localhost}
+		Access-Control-Allow-Credentials "true"
+	}
+}
+
+{$DOMAIN:localhost} {
+	reverse_proxy client:3000
+}
