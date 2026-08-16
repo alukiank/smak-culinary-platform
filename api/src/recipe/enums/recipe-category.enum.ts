@@ -1,0 +1,16 @@
+export enum CategoryEnum {
+  BREAKFAST_AND_BRUNCH = 'Breakfast & Brunch',
+  APPETIZERS_AND_STARTERS = 'Appetizers & Starters',
+  SOUPS_AND_STEWS = 'Soups & Stews',
+  SALADS = 'Salads',
+  POULTRY = 'Poultry',
+  MEAT = 'Meat',
+  SEAFOOD = 'Seafood',
+  SIDE_DISHES = 'Side Dishes',
+  SNACKS = 'Snacks',
+  BREADS_AND_BAKERY = 'Breads & Bakery',
+  DESSERTS = 'Desserts',
+  BEVERAGES = 'Beverages',
+  SAUCES_AND_DRESSINGS = 'Sauces & Dressings',
+  DRINKS = 'Drinks',
+}

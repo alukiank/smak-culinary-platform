@@ -1,0 +1,22 @@
+export enum CuisineEnum {
+  AMERICAN = 'american',
+  BRITISH = 'british',
+  CHINESE = 'chinese',
+  FRENCH = 'french',
+  GEORGIAN = 'georgian',
+  GERMAN = 'german',
+  GREEK = 'greek',
+  INDIAN = 'indian',
+  ITALIAN = 'italian',
+  JAPANESE = 'japanese',
+  KOREAN = 'korean',
+  MEXICAN = 'mexican',
+  POLISH = 'polish',
+  SPANISH = 'spanish',
+  THAI = 'thai',
+  TURKISH = 'turkish',
+  UKRAINIAN = 'ukrainian',
+  VIETNAMESE = 'vietnamese',
+  OTHER = 'other',
+}
+
