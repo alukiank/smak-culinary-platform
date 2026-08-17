@@ -13,8 +13,9 @@
   </p>
 
   <p>
-    <b>UI Language:</b> Ukrainian 🇺🇦 &nbsp;|&nbsp;
-    <b>Docs:</b> English 🇬🇧
+    <b>Language / Мова:</b> &nbsp;
+    <b>[English 🇬🇧]</b> &nbsp;|&nbsp;
+    <a href="README.uk.md">Українська 🇺🇦</a>
   </p>
 
   <p align="center">
@@ -56,26 +57,45 @@ Traditional recipe websites are cluttered with ads, rigid search forms, and stat
 
 <!-- Replace the video/GIF placeholders below with your actual demo recordings -->
 
-### 1. Conversational AI Assistant & Live Tool Execution
-Natural language culinary guidance with real-time Server-Sent Events (SSE) streaming, dynamic database search tool-calling, and interactive recipe slider injection.
+### 1. Recipe Catalog, Semantic Search & Advanced Filtering
+Interactive recipe feed with comprehensive faceted filtering, natural language search, and responsive grid exploration.
 
-<!-- Demo Video / GIF -->
+<!-- Demo Video / GIF: Recipe catalog, filters, and feed navigation -->
+<!-- <video src="https://your-domain.com/videos/recipe-catalog-demo.mp4" controls width="100%"></video> -->
+> *Demonstrates live recipe browsing, sliding filter panel interactions, multi-diet toggles, and instant catalog updates.*
+
+**Core Page Capabilities:**
+- **Faceted Dietary & Allergen Switches:** One-click toggles for Vegan, Vegetarian, Gluten-Free, Lactose-Free, Nut-Free, Halal, and Kosher diets with automated profile synchronization.
+- **Granular Culinary Parameters:** Filter by dish category, world cuisines (multi-select), cooking difficulty (Easy, Medium, Hard), cooking speeds (Fast, Medium, Slow), and minimum review ratings (3+, 4+, 4.5+).
+- **Interactive Slider Controls:** Reactive range sliders for maximum cooking time (5 to 180+ min) and minimum healthiness index (0 to 100%).
+- **Hybrid Semantic Search:** Real-time query input combining natural language understanding via vector embeddings (`pgvector`) with relational SQL constraints.
+- **Active Filter Pills & Reset:** Visual badge indicators showing all applied criteria with instant one-click removal and full catalog reset.
+- **Dynamic Catalog Grid & Pagination:** Smooth responsive recipe cards featuring cook time, difficulty badges, health scores, community ratings, and server-side pagination with item count indicators.
+
+### 2. Conversational AI Sous-Chef & Live Tool Execution
+Real-time conversational culinary assistant powered by Google Gemini (`gemini-3.1-flash-lite`), executing multi-turn tool calls and streaming responses via Server-Sent Events (SSE).
+
+<!-- Demo Video / GIF: Conversational AI assistant and live tool execution -->
 <!-- <video src="https://your-domain.com/videos/ai-assistant-demo.mp4" controls width="100%"></video> -->
-> *The AI assistant processes complex queries in natural Ukrainian, handles dietary exclusions (e.g. "що приготувати без лактози на вечерю"), calls backend database tools, and streams response tokens alongside interactive recipe sliders.*
+> *The AI assistant processes complex queries in natural Ukrainian, handles dietary exclusions (e.g., "що приготувати без лактози на вечерю"), calls backend database tools, and streams response tokens alongside interactive recipe sliders.*
 
-### 2. Hybrid Semantic Search & Dietary Filtering
-Faceted recipe discovery combining relational SQL filtering (allergens, vegan/vegetarian, cooking duration, health scores) with 768-dimensional vector cosine similarity via `pgvector`.
+**Key AI Capabilities:**
+- **Natural Language & Context Understanding:** Full support for Ukrainian natural language prompts, dietary nuances, mood-based requests, and conversational multi-turn dialogues.
+- **Multi-Turn Tool Calling:** Autonomous execution of backend tools (`search_recipes`, `get_recipe_details`) across multiple reasoning loops to retrieve accurate database recipes.
+- **Dynamic UI Card & Slider Injection:** Emits SSE metadata events to inject interactive `ChatRecipeSlider` components, recipe cards, and action buttons directly into the message feed.
+- **In-Context Recipe Guidance (Floating Assistant):** Ingests full dish metadata (ingredients, quantities, cooking steps) on recipe detail pages to advise on ingredient substitutions, measurement conversions, and culinary techniques in real time.
+- **Automated Dietary & Allergen Safeguards:** Respects user allergen profiles and nutritional requirements (`display_user_diets`, `display_user_allergies`) to guarantee safe recommendations.
+- **Platform Navigation & Knowledge:** Guides users through platform features, settings, and workflows via `get_site_documentation`.
 
-<!-- Demo Video / GIF -->
-<!-- <video src="https://your-domain.com/videos/search-filter-demo.mp4" controls width="100%"></video> -->
-> *Demonstrates typo-tolerant Ukrainian semantic search, multi-tag filtering, and instant database querying.*
+### 3. Subscription Plans & Transparent Pricing
+Tiered monetization model with feature matrices, AI request quotas, and secure LiqPay payment processing.
 
-### 3. In-Context Recipe Experience & Floating AI Companion
-Comprehensive recipe view featuring step-by-step cooking directions, ingredient checklists, and an embedded floating AI assistant.
+<p align="center">
+  <img src="docs/tarrifs.png" width="900" alt="SMAK Subscription Tiers and Pricing" />
+</p>
 
-<!-- Demo Video / GIF -->
-<!-- <video src="https://your-domain.com/videos/recipe-detail-demo.mp4" controls width="100%"></video> -->
-> *Demonstrates interactive recipe interaction and real-time culinary Q&A with full recipe context automatically injected.*
+**Subscription Tiers Overview:**
+- **Automated Billing & Quota Guard:** Embedded LiqPay checkout widget, subscription status tracking, automated renewal schedules, and Redis-backed rate limiting.
 
 ## Key Features
 
