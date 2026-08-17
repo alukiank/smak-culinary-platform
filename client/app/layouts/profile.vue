@@ -113,17 +113,17 @@ const dropdownItems = computed(() => {
       <div class="max-w-7xl mx-auto w-full px-4 sm:px-6 lg:px-8 h-16 sm:h-20 flex items-center justify-between gap-3 sm:gap-6">
         
         <!-- Logo (Original SMAK Brand) -->
-        <NuxtLink to="/" class="flex items-center gap-2.5 group shrink-0 relative transition-transform duration-300 ease-out active:scale-95">
-          <div class="relative w-8 h-8 sm:w-10 sm:h-10 flex items-center justify-center">
-            <div class="absolute inset-0 rounded-full bg-coral-500/20 blur-sm opacity-0 group-hover:opacity-100 transition-opacity duration-300 pointer-events-none"></div>
+        <NuxtLink to="/" class="inline-flex items-end gap-2.5 group shrink-0 relative transition-transform duration-300 ease-out active:scale-95">
+          <div class="relative w-9.5 h-9.5 sm:w-11 sm:h-11 flex items-end justify-center shrink-0">
+            <div class="absolute -inset-1 rounded-full bg-gradient-to-r from-coral-500/30 to-amber-500/25 blur-md opacity-0 group-hover:opacity-100 transition-all duration-500 ease-out pointer-events-none transform-gpu scale-90 group-hover:scale-110"></div>
             <img 
               src="/images/logo.png" 
               alt="Logo" 
-              class="w-full h-full object-contain transform-gpu transition-all duration-300 ease-out group-hover:scale-110" 
+              class="relative w-full h-full object-contain object-bottom transform-gpu transition-transform duration-500 ease-out group-hover:scale-105" 
             />
           </div>
           
-          <span class="font-display font-black text-2xl sm:text-3xl tracking-tighter text-smak-neutral-900 dark:text-white flex items-center group-hover:text-coral-500 transition-colors">
+          <span class="font-display font-black text-2xl sm:text-3xl tracking-tighter leading-none text-smak-neutral-900 dark:text-white group-hover:text-coral-500 transition-colors duration-300">
             SMAK
           </span>
         </NuxtLink>

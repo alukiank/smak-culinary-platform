@@ -51,13 +51,16 @@ const toggleColorMode = () => {
     <!-- Sidebar -->
     <aside class="w-64 border-r border-smak-neutral-200 dark:border-smak-neutral-800 bg-white dark:bg-smak-neutral-900 flex flex-col">
       <!-- Logo -->
-      <NuxtLink to="/" class="h-16 px-6 flex items-center gap-3 border-b border-smak-neutral-200 dark:border-smak-neutral-800 group transition-smooth">
-        <img 
-          src="/images/logo.png" 
-          alt="Logo" 
-          class="w-8 h-8 object-contain transition-all duration-500 group-hover:scale-110 filter drop-shadow-[0_0_6px_rgba(240,91,91,0.2)] group-hover:drop-shadow-[0_0_12px_rgba(240,91,91,0.5)]" 
-        />
-        <span class="font-display font-bold text-xl text-coral-600 dark:text-coral-400 group-hover:text-coral-500 dark:group-hover:text-coral-300 transition-colors duration-300">
+      <NuxtLink to="/" class="h-16 px-6 inline-flex items-end pb-4.5 gap-3 border-b border-smak-neutral-200 dark:border-smak-neutral-800 group transition-smooth">
+        <div class="relative w-9 h-9 flex items-end justify-center shrink-0">
+          <div class="absolute -inset-1 rounded-full bg-gradient-to-r from-coral-500/30 to-amber-500/25 blur-md opacity-0 group-hover:opacity-100 transition-all duration-500 ease-out pointer-events-none transform-gpu scale-90 group-hover:scale-110"></div>
+          <img 
+            src="/images/logo.png" 
+            alt="Logo" 
+            class="relative w-full h-full object-contain object-bottom transform-gpu transition-transform duration-500 ease-out group-hover:scale-105" 
+          />
+        </div>
+        <span class="font-display font-bold text-xl leading-none text-coral-600 dark:text-coral-400 group-hover:text-coral-500 dark:group-hover:text-coral-300 transition-colors duration-300">
           Smak Admin
         </span>
       </NuxtLink>

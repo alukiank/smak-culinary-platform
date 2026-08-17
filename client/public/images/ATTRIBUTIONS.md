@@ -2,11 +2,17 @@
 
 This project uses the following images in the frontend UI.
 
+## Original Brand Assets
+
+The following branding assets were created and designed by the author (**Andrii Lukianenko**):
+
+- `logo.png` — SMAK platform brand logo
+- `favicon.ico` — Application tab favicon
+
 ## AI-Generated Images
 
-The following images were generated using Google's AI image generation tools (Imagen / Nano Banana):
+The following background banners and illustrations were generated using Google's AI image generation tools (Imagen / Nano Banana):
 
-- `logo.png` — Platform logo
 - `cooking_banner_bg.png` — Hero section background
 - `food_ingredients_banner.png` — Ingredients illustration banner
 - `smak-auth-food-banner.jpg` — Authentication page food banner
