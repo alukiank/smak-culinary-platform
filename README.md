@@ -58,7 +58,7 @@ Traditional recipe websites are cluttered with ads, rigid search forms, and stat
 ### 1. Recipe Catalog, Semantic Search & Advanced Filtering
 Interactive recipe feed with comprehensive faceted filtering, natural language search, and responsive grid exploration.
 
-<video src="docs/recipes-catalog.mp4" controls width="100%"></video>
+<video src="https://github.com/user-attachments/assets/7c5051ae-091a-4d61-8c0f-7d2561ba024c" controls width="100%"></video>
 
 > *Demonstrates live recipe browsing, sliding filter panel interactions, multi-diet toggles, and instant catalog updates.*
 
@@ -73,7 +73,7 @@ Interactive recipe feed with comprehensive faceted filtering, natural language s
 ### 2. Conversational AI Sous-Chef & Live Tool Execution
 Real-time conversational culinary assistant powered by Google Gemini (`gemini-3.1-flash-lite`), executing multi-turn tool calls and streaming responses via Server-Sent Events (SSE).
 
-<video src="docs/ai-assistant.mp4" controls width="100%"></video>
+<video src="https://github.com/user-attachments/assets/9439dbdd-cca8-467b-9eed-a55395f9ba2e" controls width="100%"></video>
 
 > *The AI assistant processes complex queries in natural Ukrainian, handles dietary exclusions (e.g., "що приготувати без лактози на вечерю"), calls backend database tools, and streams response tokens alongside interactive recipe sliders.*
 
@@ -91,9 +91,6 @@ Tiered monetization model with feature matrices, AI request quotas, and secure L
 <p align="center">
   <img src="docs/tarrifs.png" width="900" alt="SMAK Subscription Tiers and Pricing" />
 </p>
-
-**Subscription Tiers Overview:**
-- **Automated Billing & Quota Guard:** Embedded LiqPay checkout widget, subscription status tracking, automated renewal schedules, and Redis-backed rate limiting.
 
 ## Key Features
 
