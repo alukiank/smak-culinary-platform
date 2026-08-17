@@ -204,7 +204,7 @@ const dropdownItems = computed(() => {
                 class="inline-flex items-center gap-1.5 px-3.5 sm:px-4 py-1.5 sm:py-2 rounded-full font-bold text-xs sm:text-sm bg-coral-500 hover:bg-coral-600 text-white shadow-md shadow-coral-500/25 transition-all duration-200 hover:scale-[1.04] active:scale-95 shrink-0"
               >
                 <UIcon name="i-lucide-user" class="w-3.5 h-3.5" />
-                <span>Авторизація</span>
+                <span>Реєстрація</span>
               </NuxtLink>
             </div>
 
@@ -524,9 +524,9 @@ const dropdownItems = computed(() => {
                 </span>
                 <ul class="flex flex-col gap-3 text-sm font-semibold">
                   <li>
-                    <NuxtLink to="/rules" class="text-smak-neutral-500 hover:text-coral-500 dark:text-smak-neutral-400 dark:hover:text-coral-400 transition-colors flex items-center gap-1.5 group">
+                    <NuxtLink to="/terms" class="text-smak-neutral-500 hover:text-coral-500 dark:text-smak-neutral-400 dark:hover:text-coral-400 transition-colors flex items-center gap-1.5 group">
                       <UIcon name="i-lucide-chevron-right" class="w-3.5 h-3.5 opacity-0 -ml-4 group-hover:opacity-100 group-hover:ml-0 transition-all duration-200 text-coral-500" />
-                      Правила користування
+                      Умови використання
                     </NuxtLink>
                   </li>
                   <li>
@@ -536,7 +536,7 @@ const dropdownItems = computed(() => {
                     </NuxtLink>
                   </li>
                   <li>
-                    <a href="mailto:support@smak.ai" class="text-smak-neutral-500 hover:text-coral-500 dark:text-smak-neutral-400 dark:hover:text-coral-400 transition-colors flex items-center gap-1.5 group">
+                    <a href="mailto:a.lukiank@gmail.com" class="text-smak-neutral-500 hover:text-coral-500 dark:text-smak-neutral-400 dark:hover:text-coral-400 transition-colors flex items-center gap-1.5 group">
                       <UIcon name="i-lucide-chevron-right" class="w-3.5 h-3.5 opacity-0 -ml-4 group-hover:opacity-100 group-hover:ml-0 transition-all duration-200 text-coral-500" />
                       Напишіть нам
                     </a>

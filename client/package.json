@@ -3,7 +3,7 @@
   "version": "1.0.0",
   "description": "AI-powered culinary platform frontend built with Nuxt 4 and Vue 3",
   "author": "Andrii Lukianenko <a.lukiank@gmail.com>",
-  "license": "MIT",
+  "license": "PolyForm-Noncommercial-1.0.0",
   "type": "module",
   "private": true,
   "scripts": {

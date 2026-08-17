@@ -12,7 +12,7 @@
     <img src="https://img.shields.io/badge/Backend-NestJS_10-E0234E?logo=nestjs&logoColor=white" alt="NestJS">
     <img src="https://img.shields.io/badge/Database-PostgreSQL_%7C_pgvector-4169E1?logo=postgresql&logoColor=white" alt="PostgreSQL">
     <img src="https://img.shields.io/badge/AI-Google_Gemini-8E75B2?logo=google&logoColor=white" alt="Google Gemini">
-    <a href="LICENSE"><img src="https://img.shields.io/badge/License-MIT-blue" alt="License: MIT"></a>
+    <a href="LICENSE"><img src="https://img.shields.io/badge/License-PolyForm_Noncommercial_1.0.0-blue" alt="License: PolyForm Noncommercial 1.0.0"></a>
   </p>
 
   <p align="center">
@@ -209,6 +209,6 @@ npm run dev
 
 ## License & Attributions
 
-- **License**: Open-sourced under the [MIT License](LICENSE).
+- **License**: Licensed under the [PolyForm Noncommercial License 1.0.0](LICENSE) (Source-available for personal & non-commercial use; all commercial rights reserved by the author).
 - **Author**: [Andrii Lukianenko](mailto:a.lukiank@gmail.com)
-- **Asset Attributions**: Detailed media origin documentation in [ATTRIBUTIONS.md](client/public/images/ATTRIBUTIONS.md).
+- **Asset Attributions**: Detailed media origin documentation in [ATTRIBUTIONS.md](ATTRIBUTIONS.md).

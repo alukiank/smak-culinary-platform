@@ -265,6 +265,6 @@ The API server will listen on `http://localhost:4000`.
 
 ## License
 
-This backend application is open-sourced under the [MIT License](../LICENSE).  
+This backend application is licensed under the [PolyForm Noncommercial License 1.0.0](../LICENSE).  
 Author: **Andrii Lukianenko** (<a.lukiank@gmail.com>)
 

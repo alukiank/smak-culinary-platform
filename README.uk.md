@@ -12,7 +12,7 @@
     <img src="https://img.shields.io/badge/Backend-NestJS_10-E0234E?logo=nestjs&logoColor=white" alt="NestJS">
     <img src="https://img.shields.io/badge/Database-PostgreSQL_%7C_pgvector-4169E1?logo=postgresql&logoColor=white" alt="PostgreSQL">
     <img src="https://img.shields.io/badge/AI-Google_Gemini-8E75B2?logo=google&logoColor=white" alt="Google Gemini">
-    <a href="LICENSE"><img src="https://img.shields.io/badge/License-MIT-blue" alt="Ліцензія: MIT"></a>
+    <a href="LICENSE"><img src="https://img.shields.io/badge/License-PolyForm_Noncommercial_1.0.0-blue" alt="Ліцензія: PolyForm Noncommercial 1.0.0"></a>
   </p>
 
   <p align="center">
@@ -209,6 +209,6 @@ npm run dev
 
 ## Ліцензія та авторство
 
-- **Ліцензія**: Відкритий сирцевий код під [MIT License](LICENSE).
+- **Ліцензія**: [PolyForm Noncommercial License 1.0.0](LICENSE) (відкритий сирцевий код для некомерційного та освітнього використання; усі комерційні права належать автору).
 - **Автор**: [Андрій Лук'яненко](mailto:a.lukiank@gmail.com)
-- **Атрибуція медіа-ресурсів**: Документація джерел зображень у [ATTRIBUTIONS.md](client/public/images/ATTRIBUTIONS.md).
+- **Атрибуція медіа-ресурсів**: Документація джерел зображень у [ATTRIBUTIONS.md](ATTRIBUTIONS.md).

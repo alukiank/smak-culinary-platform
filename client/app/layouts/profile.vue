@@ -204,7 +204,7 @@ const dropdownItems = computed(() => {
                 class="inline-flex items-center gap-1.5 px-3.5 sm:px-4 py-1.5 sm:py-2 rounded-full font-bold text-xs sm:text-sm bg-coral-500 hover:bg-coral-600 text-white shadow-md shadow-coral-500/25 transition-all duration-200 hover:scale-[1.04] active:scale-95 shrink-0"
               >
                 <UIcon name="i-lucide-user" class="w-3.5 h-3.5" />
-                <span>Авторизація</span>
+                <span>Реєстрація</span>
               </NuxtLink>
             </div>
 

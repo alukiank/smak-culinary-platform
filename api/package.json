@@ -4,7 +4,7 @@
   "description": "AI-powered culinary platform backend with semantic recipe search, real-time chat assistant, and billing integration",
   "author": "Andrii Lukianenko <a.lukiank@gmail.com>",
   "private": true,
-  "license": "MIT",
+  "license": "PolyForm-Noncommercial-1.0.0",
   "scripts": {
     "build": "nest build",
     "format": "prettier --write \"src/**/*.ts\" \"test/**/*.ts\"",
