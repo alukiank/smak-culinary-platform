@@ -14,7 +14,7 @@
 
   <p>
     <b>Language / Мова:</b> &nbsp;
-    <b>[English 🇬🇧]</b> &nbsp;|&nbsp;
+    <a href="README.md"><b>[ English 🇬🇧 ]</b></a> &nbsp;|&nbsp;
     <a href="README.uk.md">Українська 🇺🇦</a>
   </p>
 
@@ -55,13 +55,11 @@ Traditional recipe websites are cluttered with ads, rigid search forms, and stat
 
 ## Product Showcase
 
-<!-- Replace the video/GIF placeholders below with your actual demo recordings -->
-
 ### 1. Recipe Catalog, Semantic Search & Advanced Filtering
 Interactive recipe feed with comprehensive faceted filtering, natural language search, and responsive grid exploration.
 
-<!-- Demo Video / GIF: Recipe catalog, filters, and feed navigation -->
-<!-- <video src="https://your-domain.com/videos/recipe-catalog-demo.mp4" controls width="100%"></video> -->
+<video src="docs/recipes-catalog.mp4" controls width="100%"></video>
+
 > *Demonstrates live recipe browsing, sliding filter panel interactions, multi-diet toggles, and instant catalog updates.*
 
 **Core Page Capabilities:**
@@ -75,8 +73,8 @@ Interactive recipe feed with comprehensive faceted filtering, natural language s
 ### 2. Conversational AI Sous-Chef & Live Tool Execution
 Real-time conversational culinary assistant powered by Google Gemini (`gemini-3.1-flash-lite`), executing multi-turn tool calls and streaming responses via Server-Sent Events (SSE).
 
-<!-- Demo Video / GIF: Conversational AI assistant and live tool execution -->
-<!-- <video src="https://your-domain.com/videos/ai-assistant-demo.mp4" controls width="100%"></video> -->
+<video src="docs/ai-assistant.mp4" controls width="100%"></video>
+
 > *The AI assistant processes complex queries in natural Ukrainian, handles dietary exclusions (e.g., "що приготувати без лактози на вечерю"), calls backend database tools, and streams response tokens alongside interactive recipe sliders.*
 
 **Key AI Capabilities:**
