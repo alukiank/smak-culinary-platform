@@ -1,7 +1,10 @@
 <div align="center">
-  <img src="client/public/images/logo.png" width="100" alt="SMAK Logo" />
-  <h1>SMAK</h1>
-  <p><b>AI-powered culinary platform with semantic recipe discovery and real-time conversational sous-chef.</b></p>
+
+  <p>
+    <b>Language / Мова:</b> &nbsp;
+    <a href="README.md"><b>[ English 🇬🇧 ]</b></a> &nbsp;|&nbsp;
+    <a href="README.uk.md">Українська 🇺🇦</a>
+  </p>
 
   <p>
     <a href="https://github.com/alukiank/smak-culinary-platform/releases"><img src="https://img.shields.io/badge/Release-v1.0.0-brightgreen" alt="Release v1.0.0"></a>
@@ -12,14 +15,8 @@
     <a href="LICENSE"><img src="https://img.shields.io/badge/License-MIT-blue" alt="License: MIT"></a>
   </p>
 
-  <p>
-    <b>Language / Мова:</b> &nbsp;
-    <a href="README.md"><b>[ English 🇬🇧 ]</b></a> &nbsp;|&nbsp;
-    <a href="README.uk.md">Українська 🇺🇦</a>
-  </p>
-
   <p align="center">
-    <img src="docs/smak-banner.png" width="900" alt="SMAK Platform Banner" />
+    <img src="docs/smak-banner.png" width="100%" alt="SMAK Platform Banner" />
   </p>
 
   <p>
@@ -71,11 +68,11 @@ Interactive recipe feed with comprehensive faceted filtering, natural language s
 - **Dynamic Catalog Grid & Pagination:** Smooth responsive recipe cards featuring cook time, difficulty badges, health scores, community ratings, and server-side pagination with item count indicators.
 
 ### 2. Conversational AI Sous-Chef & Live Tool Execution
-Real-time conversational culinary assistant powered by Google Gemini (`gemini-3.1-flash-lite`), executing multi-turn tool calls and streaming responses via Server-Sent Events (SSE).
+Real-time conversational culinary assistant powered by Google Gemini, executing multi-turn tool calls and streaming responses via Server-Sent Events (SSE).
 
 <video src="https://github.com/user-attachments/assets/9439dbdd-cca8-467b-9eed-a55395f9ba2e" controls width="100%"></video>
 
-> *The AI assistant processes complex queries in natural Ukrainian, handles dietary exclusions (e.g., "що приготувати без лактози на вечерю"), calls backend database tools, and streams response tokens alongside interactive recipe sliders.*
+> *The AI assistant processes complex queries in natural Ukrainian, handles dietary exclusions (e.g., "what to cook without lactose for dinner"), calls backend database tools, and streams response tokens alongside interactive recipe sliders.*
 
 **Key AI Capabilities:**
 - **Natural Language & Context Understanding:** Full support for Ukrainian natural language prompts, dietary nuances, mood-based requests, and conversational multi-turn dialogues.
@@ -94,7 +91,7 @@ Tiered monetization model with feature matrices, AI request quotas, and secure L
 
 ## Key Features
 
-- **AI Culinary Assistant**: Conversational assistant powered by Google Gemini (`gemini-3.1-flash-lite`) supporting multi-turn tool calling (recipe searching, dietary constraints) and live Server-Sent Events (SSE) streaming with interactive UI card injection.
+- **AI Culinary Assistant**: Conversational assistant powered by Google Gemini supporting multi-turn tool calling (recipe searching, dietary constraints) and live Server-Sent Events (SSE) streaming with interactive UI card injection.
 - **Hybrid Semantic Search**: Combines PostgreSQL relational filtering (allergens, vegan/vegetarian flags, cooking duration, difficulty) with 768-dimensional vector cosine similarity via `pgvector` and Gemini embeddings.
 - **In-Context Recipe Guidance**: Recipe view with ingredient checklists, step-by-step directions, and an integrated floating AI assistant for instant culinary substitutions and advice.
 - **Automated Content Moderation**: Asynchronous BullMQ queue worker evaluating submitted recipes and reviews against safety policies via structured Gemini prompts.
