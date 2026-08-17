@@ -271,21 +271,21 @@ const saveDiets = async () => {
     :class="isUser ? 'flex-row-reverse' : 'flex-row'"
   >
     <!-- Bubble & content -->
-    <div class="flex flex-col gap-2 min-w-0" :class="isUser ? 'max-w-[75%] items-end' : 'w-full items-start'">
+    <div class="flex flex-col gap-2 min-w-0" :class="isUser ? 'max-w-[85%] sm:max-w-[78%] items-end' : 'w-full items-start'">
       <!-- Message bubble -->
       <div
-        class="text-base leading-relaxed transition-all duration-200"
+        class="text-[17px] sm:text-[18px] leading-relaxed transition-all duration-200"
         :class="[
           isUser
-            ? 'bg-ai-indigo-500 text-white rounded-2xl px-4 py-3 shadow-sm rounded-tr-sm'
-            : 'bg-transparent text-smak-neutral-800 dark:text-smak-neutral-100 p-0 px-4 sm:px-0 w-full max-w-full overflow-hidden',
+            ? 'bg-ai-indigo-500 text-white rounded-2xl px-5 py-3 shadow-xs rounded-tr-xs'
+            : 'bg-transparent text-smak-neutral-900 dark:text-smak-neutral-100 p-0 w-full max-w-full',
           isStreaming && !isUser ? 'animate-pulse-subtle' : ''
         ]"
       >
         <!-- AI message: render as markdown blocks -->
         <div
           v-if="!isUser"
-          class="prose dark:prose-invert max-w-none flex flex-col gap-4"
+          class="prose dark:prose-invert max-w-none flex flex-col gap-4 text-[17px] sm:text-[18px]"
         >
           <template v-for="(block, idx) in parsedMessageBlocks" :key="idx">
             <!-- Text -->
@@ -293,7 +293,7 @@ const saveDiets = async () => {
 
             <div
               v-else-if="block.type === 'recipes'"
-              class="my-3 w-full max-w-full overflow-hidden"
+              class="my-3 w-full max-w-full"
             >
               <!-- Case 1: More than one resolved recipe -> render slider -->
               <div
@@ -538,12 +538,12 @@ const saveDiets = async () => {
           </div>
         </div>
         <!-- User message: plain text -->
-        <p v-else class="whitespace-pre-wrap wrap-break-word">{{ message.content }}</p>
+        <p v-else class="whitespace-pre-wrap wrap-break-word text-[17px] sm:text-[18px] leading-relaxed">{{ message.content }}</p>
 
         <!-- Streaming cursor -->
         <span
           v-if="isStreaming && !isUser"
-          class="inline-block w-0.5 h-4 bg-ai-indigo-500 dark:bg-ai-indigo-400 animate-blink ml-0.5 align-middle"
+          class="inline-block w-0.5 h-4.5 bg-ai-indigo-500 dark:bg-ai-indigo-400 animate-blink ml-0.5 align-middle"
         />
       </div>
 
@@ -567,14 +567,23 @@ const saveDiets = async () => {
 </template>
 
 <style scoped>
+:deep(.prose) {
+  font-size: 1.0625rem; /* 17px */
+}
+@media (min-width: 640px) {
+  :deep(.prose) {
+    font-size: 1.125rem; /* 18px */
+  }
+}
 :deep(.prose p) {
   margin-bottom: 1rem;
-  line-height: 1.75;
-  font-size: 0.9375rem; /* 15px - highly legible on mobile while cooking */
+  line-height: 1.8;
+  font-size: 1.0625rem; /* 17px */
 }
 @media (min-width: 640px) {
   :deep(.prose p) {
-    font-size: 1rem; /* 16px - standard readable text on desktop */
+    font-size: 1.125rem; /* 18px */
+    line-height: 1.8;
   }
 }
 :deep(.prose p:last-child) {
@@ -596,10 +605,10 @@ const saveDiets = async () => {
 .dark :deep(.prose h1), .dark :deep(.prose h2), .dark :deep(.prose h3), .dark :deep(.prose h4) {
   color: #ffffff;
 }
-:deep(.prose h1) { font-size: 1.625rem; }
-:deep(.prose h2) { font-size: 1.4rem; }
-:deep(.prose h3) { font-size: 1.25rem; }
-:deep(.prose h4) { font-size: 1.125rem; }
+:deep(.prose h1) { font-size: 1.75rem; }
+:deep(.prose h2) { font-size: 1.5rem; }
+:deep(.prose h3) { font-size: 1.3rem; }
+:deep(.prose h4) { font-size: 1.15rem; }
 
 /* Lists formatting (Tailwind reset fix) */
 :deep(.prose ul) {
@@ -615,8 +624,14 @@ const saveDiets = async () => {
   margin-bottom: 0.75rem;
 }
 :deep(.prose li) {
-  margin-bottom: 0.375rem;
-  line-height: 1.6;
+  margin-bottom: 0.5rem;
+  line-height: 1.75;
+  font-size: 1.0625rem;
+}
+@media (min-width: 640px) {
+  :deep(.prose li) {
+    font-size: 1.125rem;
+  }
 }
 :deep(.prose li p) {
   margin-bottom: 0;
@@ -625,11 +640,17 @@ const saveDiets = async () => {
 /* Blockquotes */
 :deep(.prose blockquote) {
   border-left: 4px solid var(--color-ai-indigo-500);
-  padding-left: 1rem;
+  padding-left: 1.125rem;
   font-style: italic;
+  font-size: 1.0625rem;
   color: var(--color-smak-neutral-500);
   margin-top: 1rem;
   margin-bottom: 1rem;
+}
+@media (min-width: 640px) {
+  :deep(.prose blockquote) {
+    font-size: 1.125rem;
+  }
 }
 
 /* Tables formatting */
@@ -638,7 +659,7 @@ const saveDiets = async () => {
   border-collapse: collapse;
   margin-top: 1.25rem;
   margin-bottom: 1.25rem;
-  font-size: 0.875rem;
+  font-size: 0.9375rem;
 }
 :deep(.prose th), :deep(.prose td) {
   border: 1px solid var(--color-smak-neutral-200);

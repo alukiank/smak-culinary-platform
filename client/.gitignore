@@ -26,3 +26,6 @@ logs
 # Documentation
 docs/
 .agents/
+generated/
+public/site-docs.md
+public/site-structure.json

@@ -311,7 +311,7 @@ const confirmDeleteChat = async () => {
 </script>
 
 <template>
-  <div class="chats-page-root flex flex-col flex-1 min-h-0 w-full max-w-7xl mx-auto px-0 sm:px-6 lg:px-8">
+  <div class="chats-page-root flex flex-col flex-1 min-h-0 w-full max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
 
     <div
       id="chats-page"
@@ -327,7 +327,7 @@ const confirmDeleteChat = async () => {
           @scroll="handleScroll"
         >
           <div 
-            class="max-w-3xl mx-auto w-full px-3.5 sm:px-0 flex-1 flex flex-col"
+            class="w-full flex-1 flex flex-col"
             :class="[messages.length === 0 && !isLoadingMessages ? 'justify-center items-center h-full' : 'space-y-6']"
           >
             <div v-if="isLoadingOlderMessages" class="flex justify-center w-full">
@@ -353,7 +353,7 @@ const confirmDeleteChat = async () => {
             <!-- Empty state -->
             <div
               v-else-if="!isLoadingMessages && messages.length === 0 && !isStreaming"
-              class="flex flex-col items-center justify-center text-center gap-3 max-w-2xl px-4 w-full -mt-16 sm:-mt-24 pb-8"
+              class="flex flex-col items-center justify-center text-center gap-3 max-w-2xl px-4 w-full -mt-16 sm:-mt-24 pb-8 mx-auto"
             >
               <div class="flex items-center justify-center mb-1">
                 <UIcon 
@@ -395,8 +395,8 @@ const confirmDeleteChat = async () => {
         </div>
 
         <!-- ───── Input Area ───── -->
-        <div class="shrink-0 w-full bg-smak-neutral-50/80 dark:bg-smak-neutral-950/80 backdrop-blur-xl border-t border-smak-neutral-100 dark:border-smak-neutral-900/50 pt-2.5 pb-2 px-3 sm:px-4 z-20">
-          <div class="max-w-3xl mx-auto">
+        <div class="shrink-0 w-full bg-smak-neutral-50/80 dark:bg-smak-neutral-950/80 backdrop-blur-xl border-t border-smak-neutral-100 dark:border-smak-neutral-900/50 pt-2.5 pb-2 px-0 z-20">
+          <div class="w-full">
             <!-- AI Limit Reached Warning Banner -->
             <div
               v-if="isAiLimitReached"
@@ -433,10 +433,10 @@ const confirmDeleteChat = async () => {
               <span>Цей чат архівовано. Ви можете читати повідомлення, але не можете надсилати нові.</span>
             </div>
 
-            <!-- Input wrapper + History Button (Height: 50px, Tight Gap: gap-2) -->
+            <!-- Input wrapper + History Button (Height: 52px, Tight Gap: gap-2) -->
             <div class="flex items-center gap-2">
               <div
-                class="flex-1 flex items-center gap-3 pl-5 pr-1.5 py-1.5 rounded-full border transition-all duration-200 bg-white dark:bg-smak-neutral-800/60 h-[50px]"
+                class="flex-1 flex items-center gap-3 pl-5 pr-1.5 py-1.5 rounded-full border transition-all duration-200 bg-white dark:bg-smak-neutral-800/60 min-h-13"
                 :class="isAiLimitReached || (currentChat?.isArchived && chatId)
                   ? 'border-smak-neutral-100 dark:border-smak-neutral-800 opacity-60 pointer-events-none'
                   : 'border-smak-neutral-200 dark:border-smak-neutral-700 focus-within:border-ai-indigo-400 dark:focus-within:border-ai-indigo-600 focus-within:shadow-md focus-within:shadow-ai-indigo-500/10'"
@@ -447,8 +447,8 @@ const confirmDeleteChat = async () => {
                   v-model="messageInput"
                   placeholder="Запитайте про рецепт, інгредієнти або кулінарні поради..."
                   rows="1"
-                  class="flex-1 min-w-0 resize-none bg-transparent text-sm sm:text-base text-smak-neutral-800 dark:text-smak-neutral-100 placeholder-smak-neutral-400 dark:placeholder-smak-neutral-500 focus:outline-none leading-normal py-0.5"
-                  style="max-height: 150px; min-height: 24px;"
+                  class="flex-1 min-w-0 resize-none bg-transparent text-[17px] sm:text-[18px] text-smak-neutral-800 dark:text-smak-neutral-100 placeholder:text-[15px] sm:placeholder:text-[17px] placeholder-smak-neutral-400 dark:placeholder-smak-neutral-500 focus:outline-none leading-relaxed py-1"
+                  style="max-height: 150px; min-height: 28px;"
                   :disabled="!!(currentChat?.isArchived && chatId) || isStreaming || isAiLimitReached"
                   @keydown="handleKeydown"
                   @input="autoResize"
@@ -464,7 +464,7 @@ const confirmDeleteChat = async () => {
                     size="sm"
                     variant="solid"
                     :color="canSend ? undefined : 'neutral'"
-                    class="rounded-full font-bold h-[38px] w-[38px] p-0 flex items-center justify-center transition-all duration-200 cursor-pointer"
+                    class="rounded-full font-bold h-10 w-10 p-0 flex items-center justify-center transition-all duration-200 cursor-pointer"
                     :class="canSend
                       ? 'bg-ai-indigo-500 hover:bg-ai-indigo-600 text-white shadow-md shadow-ai-indigo-500/25 hover:scale-105'
                       : ''"
@@ -483,7 +483,7 @@ const confirmDeleteChat = async () => {
               <!-- History / Search Chat Modal Toggle Button (Identical border to input) -->
               <button
                 type="button"
-                class="rounded-full shrink-0 h-[50px] w-[50px] flex items-center justify-center cursor-pointer hover:border-coral-400 hover:text-coral-500 transition-all bg-white dark:bg-smak-neutral-800/60 border border-smak-neutral-200 dark:border-smak-neutral-700 outline-none"
+                class="rounded-full shrink-0 h-13 w-13 flex items-center justify-center cursor-pointer hover:border-coral-400 hover:text-coral-500 transition-all bg-white dark:bg-smak-neutral-800/60 border border-smak-neutral-200 dark:border-smak-neutral-700 outline-none"
                 aria-label="Історія чатів"
                 @click="() => { isChatHistoryModalOpen = true }"
               >
@@ -504,7 +504,7 @@ const confirmDeleteChat = async () => {
     <UModal
       v-model:open="isChatHistoryModalOpen"
       :ui="{
-        content: 'sm:max-w-lg rounded-3xl border border-smak-neutral-200 dark:border-smak-neutral-800 bg-white dark:bg-smak-neutral-900 shadow-2xl p-5 sm:p-6 overflow-hidden'
+        content: 'sm:max-w-xl rounded-3xl border border-smak-neutral-200 dark:border-smak-neutral-800 bg-white dark:bg-smak-neutral-900 shadow-2xl p-5 sm:p-6 overflow-hidden'
       }"
     >
       <template #content>
@@ -514,11 +514,11 @@ const confirmDeleteChat = async () => {
             <UInput
               v-model="chatSearchQuery"
               icon="i-lucide-search"
-              placeholder="Пошук у чатах"
-              size="md"
+              placeholder="Пошук у чатах..."
+              size="lg"
               class="w-full"
               :ui="{
-                base: 'rounded-full bg-smak-neutral-100 dark:bg-smak-neutral-800/80 border-0 py-2.5 px-4 text-sm font-medium focus-visible:ring-2 focus-visible:ring-coral-400'
+                base: 'rounded-full bg-smak-neutral-100 dark:bg-smak-neutral-800/80 border-0 py-3 px-5 text-base sm:text-[17px] font-semibold placeholder:text-[15px] sm:placeholder:text-base placeholder:text-smak-neutral-400 focus-visible:ring-2 focus-visible:ring-coral-400'
               }"
               autofocus
             />
@@ -526,45 +526,45 @@ const confirmDeleteChat = async () => {
 
           <!-- Section Label: Останні -->
           <div class="flex items-center justify-between pt-1">
-            <span class="text-xs font-bold uppercase tracking-wider text-smak-neutral-400 dark:text-smak-neutral-500">
+            <span class="text-sm font-black uppercase tracking-wider text-smak-neutral-400 dark:text-smak-neutral-500 font-heading">
               Останні
             </span>
             <button
               type="button"
-              class="rounded-full font-bold cursor-pointer bg-transparent hover:bg-transparent border border-transparent hover:border-coral-500 text-smak-neutral-700 dark:text-smak-neutral-300 hover:text-coral-500 transition-all px-3.5 py-1 text-sm flex items-center gap-1.5"
+              class="rounded-full font-bold cursor-pointer bg-transparent hover:bg-transparent border border-transparent hover:border-coral-500 text-smak-neutral-800 dark:text-smak-neutral-200 hover:text-coral-500 transition-all px-4 py-1.5 text-[15px] sm:text-base flex items-center gap-2"
               @click="() => { isChatHistoryModalOpen = false; router.push('/chats') }"
             >
-              <UIcon name="i-lucide-plus" class="w-4 h-4 text-coral-500" />
+              <UIcon name="i-lucide-plus" class="w-4.5 h-4.5 text-coral-500" />
               <span>Новий чат</span>
             </button>
           </div>
 
           <!-- Chat List -->
-          <div class="max-h-80 overflow-y-auto space-y-2 custom-scrollbar pr-1">
-            <div v-if="filteredChats.length === 0" class="py-8 text-center text-xs text-smak-neutral-400">
+          <div class="max-h-96 overflow-y-auto space-y-2.5 custom-scrollbar pr-1">
+            <div v-if="filteredChats.length === 0" class="py-8 text-center text-sm sm:text-base font-semibold text-smak-neutral-400">
               Чати не знайдено
             </div>
 
             <div
               v-for="c in filteredChats"
               :key="c.id"
-              class="flex items-center justify-between p-3 sm:p-3.5 rounded-2xl cursor-pointer transition-all duration-200 group border border-smak-neutral-200/50 dark:border-smak-neutral-800/50 hover:border-coral-400 dark:hover:border-coral-500 hover:shadow-xs bg-white dark:bg-smak-neutral-900/40"
+              class="flex items-center justify-between p-3.5 sm:p-4 rounded-2xl cursor-pointer transition-all duration-200 group border border-smak-neutral-200/60 dark:border-smak-neutral-800/60 hover:border-coral-400 dark:hover:border-coral-500 hover:shadow-xs bg-white dark:bg-smak-neutral-900/40"
               :class="[chatId === c.id ? 'bg-coral-50/50 dark:bg-coral-950/20 border-coral-300 dark:border-coral-800' : '']"
               @click="() => { isChatHistoryModalOpen = false; router.push(`/chats/${c.id}`) }"
             >
               <!-- Editing mode inside modal -->
               <template v-if="editingChatId === c.id">
-                <div class="flex items-center gap-2 flex-1 pr-2" @click.stop>
+                <div class="flex items-center gap-2.5 flex-1 pr-2" @click.stop>
                   <input
                     v-model="modalEditingTitle"
-                    class="flex-1 text-sm font-semibold bg-transparent text-smak-neutral-800 dark:text-smak-neutral-100 border-b-2 border-coral-400 focus:outline-none py-0.5"
+                    class="flex-1 text-[15px] sm:text-base font-bold bg-transparent text-smak-neutral-800 dark:text-smak-neutral-100 border-b-2 border-coral-400 focus:outline-none py-1"
                     maxlength="255"
                     @keydown.enter="saveChatInModal(c)"
                     @keydown.esc="editingChatId = null"
                     autofocus
                   />
-                  <button type="button" class="p-1 text-emerald-500 hover:text-emerald-600 cursor-pointer" @click="saveChatInModal(c)">
-                    <UIcon name="i-lucide-check" class="w-4 h-4" />
+                  <button type="button" class="p-1.5 text-emerald-500 hover:text-emerald-600 cursor-pointer" @click="saveChatInModal(c)">
+                    <UIcon name="i-lucide-check" class="w-5 h-5" />
                   </button>
                 </div>
               </template>
@@ -572,14 +572,14 @@ const confirmDeleteChat = async () => {
               <!-- Normal display mode -->
               <template v-else>
                 <div class="flex items-center gap-3 min-w-0 flex-1 pr-3">
-                  <span class="text-sm font-semibold truncate text-smak-neutral-900 dark:text-smak-neutral-100 group-hover:text-coral-500 transition-colors">
+                  <span class="text-[15px] sm:text-base font-bold truncate text-smak-neutral-900 dark:text-smak-neutral-100 group-hover:text-coral-500 transition-colors">
                     {{ c.title || 'Новий чат' }}
                   </span>
                 </div>
 
                 <!-- Right-aligned Date & Action Buttons -->
-                <div class="flex items-center justify-end gap-2 shrink-0 ml-auto text-right">
-                  <span class="text-xs font-medium text-smak-neutral-400 dark:text-smak-neutral-500 shrink-0 text-right">
+                <div class="flex items-center justify-end gap-2.5 shrink-0 ml-auto text-right">
+                  <span class="text-xs sm:text-sm font-semibold text-smak-neutral-400 dark:text-smak-neutral-500 shrink-0 text-right">
                     {{ formatChatDate(c.updatedAt || c.createdAt) }}
                   </span>
 
@@ -587,19 +587,19 @@ const confirmDeleteChat = async () => {
                   <div class="flex items-center gap-1 shrink-0">
                     <button
                       type="button"
-                      class="p-1.5 rounded-xl text-smak-neutral-400 hover:text-coral-500 hover:bg-coral-50 dark:hover:bg-coral-950/30 transition-all cursor-pointer"
+                      class="p-2 rounded-xl text-smak-neutral-400 hover:text-coral-500 hover:bg-coral-50 dark:hover:bg-coral-950/30 transition-all cursor-pointer"
                       title="Редагувати назву"
                       @click="startEditChatInModal(c, $event)"
                     >
-                      <UIcon name="i-lucide-pencil" class="w-3.5 h-3.5" />
+                      <UIcon name="i-lucide-pencil" class="w-4 h-4 sm:w-4.5 sm:h-4.5" />
                     </button>
                     <button
                       type="button"
-                      class="p-1.5 rounded-xl text-smak-neutral-400 hover:text-rose-500 hover:bg-rose-50 dark:hover:bg-rose-950/30 transition-all cursor-pointer"
+                      class="p-2 rounded-xl text-smak-neutral-400 hover:text-rose-500 hover:bg-rose-50 dark:hover:bg-rose-950/30 transition-all cursor-pointer"
                       title="Видалити чат"
                       @click="openDeleteChatModal(c, $event)"
                     >
-                      <UIcon name="i-lucide-trash-2" class="w-3.5 h-3.5" />
+                      <UIcon name="i-lucide-trash-2" class="w-4 h-4 sm:w-4.5 sm:h-4.5" />
                     </button>
                   </div>
                 </div>

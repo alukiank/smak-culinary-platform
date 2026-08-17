@@ -145,57 +145,61 @@ export class ToolHandlerService {
 
         case 'get_site_documentation': {
           const format = args.format || 'markdown';
-          const fileName = format === 'json' ? 'site-structure.json' : 'site-docs.md';
-          const frontendUrl = this.configService.get<string>('FRONTEND_GATEWAY') || this.configService.get<string>('FRONTEND_URL');
-          const url = `${frontendUrl}/${fileName}`;
+          const fileName = format === 'json' ? 'public-site-faq.json' : 'public-site-faq.md';
 
-          this.logger.log(`Fetching site documentation in format "${format}" from ${url}...`);
-
-          try {
-            const response = await fetch(url);
-            if (!response.ok) {
-              throw new Error(`HTTP error! status: ${response.status}`);
-            }
-            const data = await response.text();
-            this.logger.log(`Successfully fetched site documentation over HTTP.`);
-
+          // Helper to parse and return the result
+          const buildResult = (fileContent: string) => {
             if (format === 'json') {
               try {
-                return { result: { format: 'json', structure: JSON.parse(data) } };
+                return { result: { format: 'json', structure: JSON.parse(fileContent) } };
               } catch (e) {
-                return { result: { format: 'json', raw: data } };
+                return { result: { format: 'json', raw: fileContent } };
               }
             }
-            return { result: { format: 'markdown', content: data } };
-          } catch (error) {
-            this.logger.warn(`Failed to fetch documentation via HTTP (${error.message}). Falling back to local filesystem...`);
+            return { result: { format: 'markdown', content: fileContent } };
+          };
 
-            const localPath = path.resolve(process.cwd(), `../client/public/${fileName}`);
+          // Priority 1: Shared Docker volume (production)
+          const volumePath = path.resolve('/site-faq', fileName);
+          if (fs.existsSync(volumePath)) {
+            const fileContent = fs.readFileSync(volumePath, 'utf8');
+            this.logger.log(`Successfully read site FAQ from shared volume: ${volumePath}`);
+            return buildResult(fileContent);
+          }
+
+          // Priority 2: Local filesystem (development — ../client/generated/)
+          const localPath = path.resolve(process.cwd(), `../client/generated/${fileName}`);
+          if (fs.existsSync(localPath)) {
+            const fileContent = fs.readFileSync(localPath, 'utf8');
+            this.logger.log(`Successfully read site FAQ from local path: ${localPath}`);
+            return buildResult(fileContent);
+          }
+
+          // Priority 3: HTTP fetch fallback (development — from frontend URL)
+          const frontendUrl = this.configService.get<string>('FRONTEND_URL');
+          if (frontendUrl) {
+            const url = `${frontendUrl}/${fileName}`;
+            this.logger.log(`Fetching site FAQ in format "${format}" from ${url}...`);
             try {
-              if (fs.existsSync(localPath)) {
-                const fileContent = fs.readFileSync(localPath, 'utf8');
-                this.logger.log(`Successfully read site documentation from local path: ${localPath}`);
-
-                if (format === 'json') {
-                  try {
-                    return { result: { format: 'json', structure: JSON.parse(fileContent) } };
-                  } catch (e) {
-                    return { result: { format: 'json', raw: fileContent } };
-                  }
-                }
-                return { result: { format: 'markdown', content: fileContent } };
-              } else {
-                throw new Error(`Local file not found at path: ${localPath}`);
+              const response = await fetch(url);
+              if (!response.ok) {
+                throw new Error(`HTTP error! status: ${response.status}`);
               }
-            } catch (fsError) {
-              this.logger.error(`Failed to read documentation from filesystem: ${fsError.message}`);
-              return {
-                result: {
-                  error: `Could not retrieve site documentation. HTTP fetch and local fallback both failed. Detail: ${fsError.message}`,
-                },
-              };
+              const data = await response.text();
+              this.logger.log(`Successfully fetched site FAQ over HTTP.`);
+              return buildResult(data);
+            } catch (error) {
+              this.logger.warn(`Failed to fetch FAQ via HTTP (${error.message}).`);
             }
           }
+
+          // All sources exhausted
+          this.logger.error(`Could not retrieve site FAQ from any source (volume: ${volumePath}, local: ${localPath}).`);
+          return {
+            result: {
+              error: `Could not retrieve site documentation. Checked shared volume, local filesystem, and HTTP fetch — all sources unavailable.`,
+            },
+          };
         }
 
         case 'display_user_diets': {

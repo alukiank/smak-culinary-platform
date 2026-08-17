@@ -28,30 +28,23 @@ export const categoryTranslations: Record<string, string> = {
 }
 
 export const cuisineTranslations: Record<string, string> = {
-  "african": "Африканська",
   "american": "Американська",
-  "asian": "Азійська",
   "british": "Британська",
-  "caribbean": "Карибська",
   "chinese": "Китайська",
-  "european": "Європейська",
-  "filipino": "Філіппінська",
   "french": "Французька",
+  "georgian": "Грузинська",
   "german": "Німецька",
   "greek": "Грецька",
   "indian": "Індійська",
   "italian": "Італійська",
   "japanese": "Японська",
   "korean": "Корейська",
-  "latin american": "Латиноамериканська",
-  "mediterranean": "Середземноморська",
   "mexican": "Мексиканська",
-  "middle eastern": "Близькосхідна",
-  "middle eastern region": "Близькосхідний регіон",
-  "russian": "Східноєвропейська",
+  "polish": "Польська",
   "spanish": "Іспанська",
   "thai": "Тайська",
   "turkish": "Турецька",
+  "ukrainian": "Українська",
   "vietnamese": "В'єтнамська",
   "other": "Інша"
 }

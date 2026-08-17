@@ -13,13 +13,12 @@ const props = withDefaults(defineProps<Props>(), {
 
 const scrollContainer = ref<HTMLElement | null>(null)
 const canScrollLeft = ref(false)
-const canScrollRight = ref(props.recipes.length > 2)
+const canScrollRight = ref(props.recipes.length > 3)
 
 const checkScroll = () => {
   if (!scrollContainer.value) return
   const el = scrollContainer.value
   canScrollLeft.value = el.scrollLeft > 5
-  // Check if scroll is possible to the right with some buffer (10px)
   canScrollRight.value = el.scrollLeft + el.clientWidth < el.scrollWidth - 10
 }
 
@@ -27,8 +26,8 @@ const scroll = (direction: 'left' | 'right') => {
   if (!scrollContainer.value) return
   const el = scrollContainer.value
   const firstCard = el.querySelector('.slider-card') as HTMLElement | null
-  const cardWidth = firstCard ? firstCard.offsetWidth : 200
-  const gap = 12 // gap-3 is 12px
+  const cardWidth = firstCard ? firstCard.offsetWidth : 300
+  const gap = 12
   const scrollAmount = direction === 'left' ? -(cardWidth + gap) * 2 : (cardWidth + gap) * 2
   
   el.scrollBy({
@@ -57,7 +56,6 @@ onBeforeUnmount(() => {
   window.removeEventListener('resize', checkScroll)
 })
 
-// Watch recipes length or values to re-check scroll state
 watch(() => props.recipes, () => {
   nextTick(() => {
     checkScroll()
@@ -68,20 +66,20 @@ watch(() => props.recipes, () => {
 </script>
 
 <template>
-  <div class="relative w-full group/slider my-3" @mouseenter="checkScroll">
+  <div class="relative w-full group/slider my-3.5" @mouseenter="checkScroll">
     <!-- Left scroll button -->
     <Transition
       enter-active-class="transition duration-200 ease-out"
       leave-active-class="transition duration-150 ease-in"
-      enter-from-class="opacity-0 scale-95"
+      enter-from-class="opacity-0 scale-90"
       enter-to-class="opacity-100 scale-100"
       leave-from-class="opacity-100 scale-100"
-      leave-to-class="opacity-0 scale-95"
+      leave-to-class="opacity-0 scale-90"
     >
       <button
         v-if="canScrollLeft"
         type="button"
-        class="absolute left-2 top-1/2 -translate-y-1/2 z-20 w-8 h-8 rounded-full flex items-center justify-center bg-white/90 dark:bg-smak-neutral-800/90 text-smak-neutral-800 dark:text-white shadow-md border border-smak-neutral-200/50 dark:border-smak-neutral-700/50 backdrop-blur-xs cursor-pointer hover:scale-110 active:scale-95 transition-all duration-200"
+        class="absolute left-2 top-1/2 -translate-y-1/2 z-30 w-9 h-9 sm:w-10 sm:h-10 rounded-full flex items-center justify-center bg-white/95 dark:bg-smak-neutral-800/95 text-coral-500 dark:text-coral-400 shadow-xl shadow-black/15 border-2 border-coral-500/40 dark:border-coral-500/50 hover:bg-coral-500 hover:text-white dark:hover:bg-coral-500 dark:hover:text-white hover:scale-110 active:scale-95 transition-all duration-200 cursor-pointer backdrop-blur-md"
         aria-label="Попередні рецепти"
         @click="scroll('left')"
       >
@@ -93,15 +91,15 @@ watch(() => props.recipes, () => {
     <Transition
       enter-active-class="transition duration-200 ease-out"
       leave-active-class="transition duration-150 ease-in"
-      enter-from-class="opacity-0 scale-95"
+      enter-from-class="opacity-0 scale-90"
       enter-to-class="opacity-100 scale-100"
       leave-from-class="opacity-100 scale-100"
-      leave-to-class="opacity-0 scale-95"
+      leave-to-class="opacity-0 scale-90"
     >
       <button
         v-if="canScrollRight"
         type="button"
-        class="absolute right-2 top-1/2 -translate-y-1/2 z-20 w-8 h-8 rounded-full flex items-center justify-center bg-white/90 dark:bg-smak-neutral-800/90 text-smak-neutral-800 dark:text-white shadow-md border border-smak-neutral-200/50 dark:border-smak-neutral-700/50 backdrop-blur-xs cursor-pointer hover:scale-110 active:scale-95 transition-all duration-200"
+        class="absolute right-2 top-1/2 -translate-y-1/2 z-30 w-9 h-9 sm:w-10 sm:h-10 rounded-full flex items-center justify-center bg-white/95 dark:bg-smak-neutral-800/95 text-coral-500 dark:text-coral-400 shadow-xl shadow-black/15 border-2 border-coral-500/40 dark:border-coral-500/50 hover:bg-coral-500 hover:text-white dark:hover:bg-coral-500 dark:hover:text-white hover:scale-110 active:scale-95 transition-all duration-200 cursor-pointer backdrop-blur-md"
         aria-label="Наступні рецепти"
         @click="scroll('right')"
       >
@@ -112,12 +110,15 @@ watch(() => props.recipes, () => {
     <!-- Scrollable container -->
     <div
       ref="scrollContainer"
-      class="flex flex-row flex-nowrap items-stretch overflow-x-auto overflow-y-hidden gap-3 pb-2 custom-scrollbar w-full scroll-smooth"
-      :class="{
-        'mask-both': canScrollLeft && canScrollRight,
-        'mask-left': canScrollLeft && !canScrollRight,
-        'mask-right': !canScrollLeft && canScrollRight
-      }"
+      class="flex flex-row flex-nowrap items-stretch overflow-x-auto overflow-y-hidden gap-3 pb-2.5 pt-1 custom-scrollbar w-full scroll-smooth"
+      :class="[
+        recipes.length > 3 ? 'slider-many' : 'slider-three',
+        {
+          'mask-both': canScrollLeft && canScrollRight,
+          'mask-left': canScrollLeft && !canScrollRight,
+          'mask-right': !canScrollLeft && canScrollRight
+        }
+      ]"
       @scroll="checkScroll"
     >
       <ChatRecipeCard
@@ -150,23 +151,41 @@ watch(() => props.recipes, () => {
   background: var(--color-coral-400);
 }
 
-/* Premium edge fading gradients */
+/* Edge fading gradients */
 .mask-both {
-  mask-image: linear-gradient(to right, transparent, black 32px, black calc(100% - 32px), transparent);
-  -webkit-mask-image: linear-gradient(to right, transparent, black 32px, black calc(100% - 32px), transparent);
+  mask-image: linear-gradient(to right, transparent, black 28px, black calc(100% - 28px), transparent);
+  -webkit-mask-image: linear-gradient(to right, transparent, black 28px, black calc(100% - 28px), transparent);
 }
 .mask-right {
-  mask-image: linear-gradient(to right, black, black calc(100% - 32px), transparent);
-  -webkit-mask-image: linear-gradient(to right, black, black calc(100% - 32px), transparent);
+  mask-image: linear-gradient(to right, black, black calc(100% - 28px), transparent);
+  -webkit-mask-image: linear-gradient(to right, black, black calc(100% - 28px), transparent);
 }
 .mask-left {
-  mask-image: linear-gradient(to right, transparent, black 32px, black);
-  -webkit-mask-image: linear-gradient(to right, transparent, black 32px, black);
+  mask-image: linear-gradient(to right, transparent, black 28px, black);
+  -webkit-mask-image: linear-gradient(to right, transparent, black 28px, black);
 }
 
 :deep(.slider-card) {
-  @media (min-width: 768px) {
+  width: calc((100% - 10px) / 1.25) !important;
+  min-width: 200px;
+  flex-shrink: 0;
+}
+
+@media (min-width: 540px) {
+  :deep(.slider-card) {
+    width: calc((100% - 16px) / 2.2) !important;
+    min-width: 0;
+  }
+}
+
+@media (min-width: 860px) {
+  .slider-three :deep(.slider-card) {
     width: calc((100% - 24px) / 3) !important;
+    min-width: 0;
+  }
+  .slider-many :deep(.slider-card) {
+    width: calc((100% - 24px) / 3.2) !important;
+    min-width: 0;
   }
 }
 </style>

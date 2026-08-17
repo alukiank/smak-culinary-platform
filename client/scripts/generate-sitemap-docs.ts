@@ -1,9 +1,10 @@
-import { promises as fs } from 'fs'
-import path from 'path'
+/// <reference types="node" />
+import { promises as fs } from 'node:fs'
+import path from 'node:path'
 
 interface PageDoc {
   route: string
-  filePath: string
+  url: string
   title: string
   description: string
   features: string[]
@@ -62,7 +63,7 @@ function getRouteFromPath(absolutePath: string, pagesDir: string): string {
 /**
  * Parse a Vue file to extract page documentation
  */
-async function parseVueFile(filePath: string, pagesDir: string): Promise<PageDoc> {
+async function parseVueFile(filePath: string, pagesDir: string, baseUrl: string): Promise<PageDoc> {
   const content = await fs.readFile(filePath, 'utf-8')
   const route = getRouteFromPath(filePath, pagesDir)
   
@@ -135,7 +136,7 @@ async function parseVueFile(filePath: string, pagesDir: string): Promise<PageDoc
   if (middlewareMatch) {
     if (middlewareMatch[1]) {
       // Array like ['auth', 'verified']
-      const items = middlewareMatch[1].split(',').map(i => i.replace(/['"`\s]/g, '')).filter(Boolean)
+      const items = middlewareMatch[1].split(',').map((i: string) => i.replace(/['"`\s]/g, '')).filter(Boolean)
       middleware.push(...items)
     } else if (middlewareMatch[2]) {
       // String like 'auth'
@@ -145,7 +146,7 @@ async function parseVueFile(filePath: string, pagesDir: string): Promise<PageDoc
   
   return {
     route,
-    filePath: path.relative(path.join(pagesDir, '../..'), filePath).replace(/\\/g, '/'),
+    url: `${baseUrl}${route === '/' ? '' : route}`,
     title,
     description,
     features,
@@ -154,24 +155,31 @@ async function parseVueFile(filePath: string, pagesDir: string): Promise<PageDoc
 }
 
 /**
- * Main generator execution function
+ * Main generator execution function.
+ * Generates public-site-faq.md and public-site-faq.json into the generated/ directory.
+ * Admin routes (/admin/*) are excluded from the output.
  */
 export async function generateSiteDocs(projectRoot: string) {
   const pagesDir = path.join(projectRoot, 'app/pages')
-  const publicDir = path.join(projectRoot, 'public')
+  const generatedDir = path.join(projectRoot, 'generated')
+  const baseUrl = (process.env.NUXT_PUBLIC_SITE_URL || process.env.FRONTEND_URL || (process.env.NODE_ENV === 'production' ? 'https://localhost' : 'http://localhost:3000')).replace(/\/$/, '')
   
-  console.log(`[SiteDocs] Scanning directory: ${pagesDir}`)
+  console.log(`[SiteFAQ] Scanning directory: ${pagesDir} (Base URL: ${baseUrl})`)
   
   try {
     const pageFiles = await scanDir(pagesDir)
-    console.log(`[SiteDocs] Found ${pageFiles.length} Vue pages`)
+    console.log(`[SiteFAQ] Found ${pageFiles.length} Vue pages`)
     
     const docsList: PageDoc[] = []
     
     for (const file of pageFiles) {
-      // Skip folders or files that are not page-routing views
-      // e.g. components or helper views inside page folders that don't match standard routing
-      const doc = await parseVueFile(file, pagesDir)
+      const doc = await parseVueFile(file, pagesDir, baseUrl)
+
+      // Filter out admin routes — they are not relevant for the public AI assistant
+      if (doc.route.startsWith('/admin')) {
+        continue
+      }
+
       docsList.push(doc)
     }
     
@@ -182,35 +190,35 @@ export async function generateSiteDocs(projectRoot: string) {
       return a.route.localeCompare(b.route)
     })
     
-    // Ensure public folder exists
-    await fs.mkdir(publicDir, { recursive: true })
+    // Ensure generated folder exists
+    await fs.mkdir(generatedDir, { recursive: true })
     
-    // 1. Write public/site-structure.json
-    const jsonPath = path.join(publicDir, 'site-structure.json')
+    // 1. Write generated/public-site-faq.json
+    const jsonPath = path.join(generatedDir, 'public-site-faq.json')
     await fs.writeFile(jsonPath, JSON.stringify(docsList, null, 2), 'utf-8')
-    console.log(`[SiteDocs] Successfully generated structured sitemap: ${jsonPath}`)
+    console.log(`[SiteFAQ] Successfully generated structured FAQ: ${jsonPath}`)
     
-    // 2. Write public/site-docs.md (Markdown format for easy ingestion by AI)
+    // 2. Write generated/public-site-faq.md (Markdown format for easy ingestion by AI)
     let mdContent = `# Culinary Platform SMAK — Site Structure & Features Documentation\n\n`
-    mdContent += `This document is automatically generated based on the source code of the site pages. It contains a complete list of routes (links), page descriptions, and lists of available features. The AI assistant can use this description as a knowledge base to help users.\n\n`
+    mdContent += `This document is automatically generated based on the source code of the site pages. It contains a complete list of routes, full URLs, page descriptions, and lists of available features. The AI assistant should use this description as a knowledge base to help users and provide direct clickable links to site pages.\n\n`
     mdContent += `## List of All Available Links (Routes)\n\n`
     
     // Quick summary table
-    mdContent += `| Route (URL) | Page Name | Access / Restrictions |\n`
-    mdContent += `| :--- | :--- | :--- |\n`
+    mdContent += `| Page Name | Full URL (Link) | Route (Path) | Access / Restrictions |\n`
+    mdContent += `| :--- | :--- | :--- | :--- |\n`
     for (const doc of docsList) {
       const access = doc.middleware.length > 0 
         ? `🔐 Authorized (${doc.middleware.join(', ')})` 
         : `🌐 Public`
-      mdContent += `| \`${doc.route}\` | **${doc.title}** | ${access} |\n`
+      mdContent += `| **${doc.title}** | [${doc.url || baseUrl}](${doc.url || baseUrl}) | \`${doc.route}\` | ${access} |\n`
     }
     
     mdContent += `\n---\n\n## Detailed Description of Pages and Features\n\n`
     
     for (const doc of docsList) {
       mdContent += `### 📍 Page: ${doc.title}\n\n`
-      mdContent += `* **Route (URL):** \`${doc.route}\`\n`
-      mdContent += `* **File Path:** \`${doc.filePath}\`\n`
+      mdContent += `* **Full URL:** [${doc.url || baseUrl}](${doc.url || baseUrl})\n`
+      mdContent += `* **Route (Path):** \`${doc.route}\`\n`
       
       const access = doc.middleware.length > 0 
         ? `🔐 Requires authorization (middleware: \`${doc.middleware.join(', ')}\`)` 
@@ -233,15 +241,15 @@ export async function generateSiteDocs(projectRoot: string) {
     
     // Add tips for LLM assistant
     mdContent += `## 💡 Instructions for the AI Assistant:\n\n`
-    mdContent += `1. **Navigation Assistance:** When a user asks where to find a specific feature (e.g., change allergies or pay for a plan), direct them to the corresponding URL route from the table above (e.g., \`/profile\` or \`/billing/plans\`).\n`
+    mdContent += `1. **Navigation Assistance & Links:** When a user asks where to find a specific feature (e.g., change allergies, view recipes, pay for a subscription, or edit profile), direct them using direct clickable markdown links with Full URLs (for example: [Тарифи та підписки](${baseUrl}/billing/plans) or [Мій профіль](${baseUrl}/profile)).\n`
     mdContent += `2. **Step-by-Step Explanations:** Use the page feature lists to tell the user exactly what they can do in each section of the site.\n`
     mdContent += `3. **Access Conditions:** Warn the user if a feature requires logging in (Middleware: \`auth\`), email confirmation (\`verified\`), or an administrator role (\`admin\`).\n`
     
-    const mdPath = path.join(publicDir, 'site-docs.md')
+    const mdPath = path.join(generatedDir, 'public-site-faq.md')
     await fs.writeFile(mdPath, mdContent, 'utf-8')
-    console.log(`[SiteDocs] Successfully generated markdown sitemap: ${mdPath}`)
+    console.log(`[SiteFAQ] Successfully generated markdown FAQ: ${mdPath}`)
     
   } catch (err) {
-    console.error(`[SiteDocs] Error during generation:`, err)
+    console.error(`[SiteFAQ] Error during generation:`, err)
   }
 }
