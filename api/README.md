@@ -35,26 +35,47 @@ The backend is responsible for the following core capabilities:
 ## Architecture & Tech Stack
 
 ```
-                     ┌────────────────────────┐
-                     │   Client App (Nuxt 4)  │
-                     └───────────┬────────────┘
-                                 │ HTTP / SSE
-                                 ▼
-                     ┌────────────────────────┐
-                     │   Caddy Reverse Proxy  │
-                     └───────────┬────────────┘
-                                 │
-                                 ▼
-                     ┌────────────────────────┐
-                     │   NestJS Backend API   │
-                     └───┬────────┬────────┬──┘
-                         │        │        │
-            ┌────────────┘        │        └────────────┐
-            ▼                     ▼                     ▼
-┌─────────────────────────┐ ┌───────────────┐ ┌─────────────────────────┐
-│ PostgreSQL + pgvector   │ │ Redis + BullMQ│ │  Google Gemini GenAI    │
-│  (Relational & Embed)   │ │(Cache & Queue)│ │ (Embeddings & Assistant)│
-└─────────────────────────┘ └───────────────┘ └─────────────────────────┘
+                              ┌────────────────────────┐
+                              │  Client (HTTP / SSE)   │
+                              └───────────┬────────────┘
+                                          │
+                                          │
+                      ┌────────────────────────────────────────┐
+                      │         NestJS HTTP Pipeline           │
+                      │ (Middlewares, Guards, Interceptors...) │
+                      └───────────────────┬────────────────────┘
+                                          │
+    ┌─────────────────────────────────────┴─────────────────────────────────────┐
+    │                           NestJS Domain Modules                           │
+    │ ┌────────────────────────┐ ┌────────────────────────┐ ┌─────────────────┐ │
+    │ │       AuthModule       │ │       UserModule       │ │  BillingModule  │ │
+    │ │ • Authentication       │ │ • Profiles & Accounts  │ │ • Subscriptions │ │
+    │ │ • Session Security     │ │ • Dietary Constraints  │ │ • Payments      │ │
+    │ └────────────────────────┘ └────────────────────────┘ └─────────────────┘ │
+    │ ┌────────────────────────┐ ┌────────────────────────┐ ┌─────────────────┐ │
+    │ │      RecipeModule      │ │       ChatModule       │ │ AssistantModule │ │
+    │ │ • Recipe Management    │ │ • Chat Sessions        │ │ • AI Assistant  │ │
+    │ │ • Hybrid Recipe Search │ │ • Message Handling     │ │ • Tool Execution│ │
+    │ └────────────────────────┘ └────────────────────────┘ └─────────────────┘ │
+    │ ┌────────────────────────┐ ┌────────────────────────┐ ┌─────────────────┐ │
+    │ │    ModerationModule    │ │      ReviewModule      │ │ CollectionModule │ │
+    │ │ • AI Content Safety    │ │ • Reviews & Ratings    │ │ • Saved Recipes │ │
+    │ │                        │ │ • Threaded Comments    │ │                 │ │
+    │ └────────────────────────┘ └────────────────────────┘ └─────────────────┘ │
+    └─────────────────────────────────────┬─────────────────────────────────────┘
+                                          │                           
+          ┌─────────────────┬─────────────┴───────────┬──────────────────┐
+          │                 │                         │                  │
+┌───────────────────┐ ┌───────────────┐ ┌──────────────────────────────────────────────┐
+│ PostgreSQL + pgvec│ │ Redis 7       │ │                External APIs                 │
+│ • Relational Data │ │ • Job Queues  │ │ ┌────────────────────┐ ┌───────────────────┐ │
+│ • Vector Data     │ │ • Rate Limits │ │ │Google Gemini GenAI │ │ Other Services    │ │
+│                   │ │ • Cache       │ │ │ • LLM Models       │ │ • Cloudinary      │ │
+└───────────────────┘ └───────────────┘ │ │ • Text Embeddings  │ │ • LiqPay          │ │
+                                        │ │                    │ │ • SMTP Email      │ │
+                                        │ └────────────────────┘ └───────────────────┘ │
+                                        └──────────────────────────────────────────────┘
+
 ```
 
 - **Framework**: [NestJS 10](https://nestjs.com/) (TypeScript, Express engine)

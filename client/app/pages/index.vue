@@ -259,19 +259,19 @@ const faqs = [
         <div class="hidden sm:flex absolute top-6 right-6 bg-white/95 dark:bg-smak-neutral-900/95 backdrop-blur-md px-5 py-3.5 rounded-3xl shadow-xl border border-white/40 dark:border-smak-neutral-800 items-center gap-4 z-20">
           <div class="space-y-0.5 text-left">
             <h4 class="font-heading font-extrabold text-sm sm:text-base text-smak-neutral-900 dark:text-white leading-tight">
-              Приєднуйтесь до спільноти
+              Приєднуйтесь до SMAK
             </h4>
             <p class="text-xs sm:text-sm font-semibold text-smak-neutral-500 dark:text-smak-neutral-400">
-              1 000+ учасників
+              Нам не вистачає Вас!
             </p>
           </div>
           
           <div class="flex items-center gap-1.5 shrink-0">
             <!-- Overlapping Avatars -->
             <div class="flex -space-x-2 overflow-hidden">
-              <UAvatar src="https://images.unsplash.com/photo-1534528741775-53994a69daeb?auto=format&fit=crop&w=100&q=80" alt="Учасник" size="xs" class="ring-2 ring-white dark:ring-smak-neutral-900" />
-              <UAvatar src="https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?auto=format&fit=crop&w=100&q=80" alt="Учасник" size="xs" class="ring-2 ring-white dark:ring-smak-neutral-900" />
-              <UAvatar src="https://images.unsplash.com/photo-1494790108377-be9c29b29330?auto=format&fit=crop&w=100&q=80" alt="Учасник" size="xs" class="ring-2 ring-white dark:ring-smak-neutral-900" />
+              <UAvatar src="https://images.unsplash.com/photo-1534528741775-53994a69daeb?auto=format&fit=crop&w=100&q=80" alt="Користувач" size="xs" class="ring-2 ring-white dark:ring-smak-neutral-900" />
+              <UAvatar src="https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?auto=format&fit=crop&w=100&q=80" alt="Користувач" size="xs" class="ring-2 ring-white dark:ring-smak-neutral-900" />
+              <UAvatar src="https://images.unsplash.com/photo-1494790108377-be9c29b29330?auto=format&fit=crop&w=100&q=80" alt="Користувач" size="xs" class="ring-2 ring-white dark:ring-smak-neutral-900" />
             </div>
             <!-- Red Plus Icon Button -->
             <NuxtLink 
@@ -287,11 +287,11 @@ const faqs = [
         <!-- Mobile-only compact pill badge pinned to top-left (slightly larger) -->
         <div class="sm:hidden absolute top-4 left-4 z-20 inline-flex items-center gap-2 px-3.5 py-2 rounded-full bg-black/55 backdrop-blur-md border border-white/25 text-white text-xs sm:text-sm font-semibold shadow-lg">
           <div class="flex -space-x-1.5 overflow-hidden">
-            <UAvatar src="https://images.unsplash.com/photo-1534528741775-53994a69daeb?auto=format&fit=crop&w=60&q=80" alt="Учасник" size="2xs" class="ring-1 ring-white" />
-            <UAvatar src="https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?auto=format&fit=crop&w=60&q=80" alt="Учасник" size="2xs" class="ring-1 ring-white" />
-            <UAvatar src="https://images.unsplash.com/photo-1494790108377-be9c29b29330?auto=format&fit=crop&w=60&q=80" alt="Учасник" size="2xs" class="ring-1 ring-white" />
+            <UAvatar src="https://images.unsplash.com/photo-1534528741775-53994a69daeb?auto=format&fit=crop&w=60&q=80" alt="Користувач" size="2xs" class="ring-1 ring-white" />
+            <UAvatar src="https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?auto=format&fit=crop&w=60&q=80" alt="Користувач" size="2xs" class="ring-1 ring-white" />
+            <UAvatar src="https://images.unsplash.com/photo-1494790108377-be9c29b29330?auto=format&fit=crop&w=60&q=80" alt="Користувач" size="2xs" class="ring-1 ring-white" />
           </div>
-          <span>1 000+ у спільноті</span>
+          <span>Кулінарна спільнота</span>
         </div>
 
         <!-- Mobile CTA: Pinned to top-right, matching chip size and height -->

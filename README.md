@@ -102,7 +102,7 @@ Tiered monetization model with feature matrices, AI request quotas, and secure L
 
 ```
                                  ┌───────────────────────┐
-                                 │   Browser / Client    │
+                                 │    Browser / Client   │
                                  └───────────┬───────────┘
                                              │ HTTP / HTTPS (Ports 80/443)
                                              ▼
@@ -110,18 +110,22 @@ Tiered monetization model with feature matrices, AI request quotas, and secure L
                                  │  Caddy Reverse Proxy  │
                                  └───┬───────────────┬───┘
                                      │               │
-                    /api/*, /admin/* │               │ /* (All other routes)
+                       api.localhost │               │ localhost
                                      ▼               ▼
-                        ┌─────────────────┐     ┌─────────────────┐
-                        │  NestJS Backend │     │ Nuxt 4 Frontend │
-                        └───┬─────┬─────┬─┘     └─────────────────┘
-                            │     │     │
-            ┌───────────────┘     │     └───────────────┐
-            ▼                     ▼                     ▼
-┌───────────────────────┐ ┌───────────────┐ ┌────────────────────────┐
-│ PostgreSQL + pgvector │ │ Redis + BullMQ│ │  Google Gemini GenAI   │
-│ (Relational & Vectors)│ │(Cache & Queue)│ │ (Embeddings & Assistant│
-└───────────────────────┘ └───────────────┘ └────────────────────────┘
+                        ┌──────────────────┐     ┌─────────────────┐
+                        │ NestJS Backend   │◄────┤ Nuxt 4 Frontend │
+                        │ (API & Services) │ SSR │   (SSR / CSR)   │
+                        └───┬───┬─────┬────┘     └────────┬────────┘
+                            │   │     │                   │
+            ┌───────────────┘   │     └────────────┐      │ Assets / CDN
+            ▼                   ▼                  ▼      ▼
+┌───────────────────────┐ ┌───────────────┐ ┌──────────────────────────┐
+│ PostgreSQL + pgvector │ │ Redis (BullMQ)│ │   External Services      │
+│ (Data & Vector Search)│ │(Cache & Queue)│ │ • Google Gemini (AI)     │
+└───────────────────────┘ └───────────────┘ │ • Cloudinary (Media CDN) │
+                                            │ • LiqPay (Payments)      │
+                                            │ • SMTP / Mail Server     │
+                                            └──────────────────────────┘
 ```
 
 ## Monorepo Structure
