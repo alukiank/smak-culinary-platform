@@ -23,7 +23,7 @@ The backend is responsible for the following core capabilities:
 - [Module Structure](#module-structure)
 - [Engineering Highlights](#engineering-highlights)
 - [AI Assistant & Search Pipeline](#ai-assistant--search-pipeline)
-- [API Documentation (Swagger)](#api-documentation-swagger)
+- [Technical & API Documentation (Swagger & Compodoc)](#technical--api-documentation)
 - [Environment Configuration](#environment-configuration)
 - [Database & Migrations](#database--migrations)
 - [Getting Started](#getting-started)
@@ -168,13 +168,33 @@ sequenceDiagram
 
 ---
 
-## API Documentation (Swagger)
+## Technical & API Documentation
+
+### 1. Interactive OpenAPI (Swagger)
 
 When running in development or staging mode, interactive OpenAPI documentation is automatically available:
 
 - **Swagger UI URL**: `http://localhost:4000/admin/api-docs`
 - **Specification Format**: OpenAPI 3.0 with request/response schema models for all DTOs.
 - **Authentication in Swagger**: The API uses **HttpOnly Cookies** (`accessToken`, `refreshToken`) for authentication rather than manual Authorization headers. Executing the `/auth/login` endpoint directly within Swagger automatically sets session cookies for subsequent authorized requests in your browser.
+
+### 2. Module & Architecture Documentation (Compodoc)
+
+To generate and explore comprehensive technical documentation of all NestJS modules, controllers, injectables, entities, and the complete dependency injection graph, [Compodoc](https://compodoc.app/) is pre-configured:
+
+```bash
+# Generate documentation and start local HTTP server (http://localhost:8080)
+npm run doc:generate
+
+# Serve previously generated documentation
+npm run doc:serve
+
+# Watch mode with auto-rebuild on source changes
+npm run doc:watch
+
+# Export documentation data as JSON
+npm run doc:export:json
+```
 
 ---
 
@@ -281,6 +301,8 @@ The API server will listen on `http://localhost:4000`.
 | `npm run test:e2e` | Runs End-to-End integration tests |
 | `npm run migration:run` | Executes database migrations |
 | `npm run import:dataset` | Seeds recipe dataset into PostgreSQL |
+| `npm run doc:generate` | Generates and serves Compodoc technical documentation |
+| `npm run doc:watch` | Runs Compodoc in watch mode with live reload |
 
 ---
 
