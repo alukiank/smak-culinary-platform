@@ -45,24 +45,24 @@ The backend is responsible for the following core capabilities:
                       │ (Middlewares, Guards, Interceptors...) │
                       └───────────────────┬────────────────────┘
                                           │
-    ┌─────────────────────────────────────┴─────────────────────────────────────┐
-    │                           NestJS Domain Modules                           │
-    │ ┌────────────────────────┐ ┌────────────────────────┐ ┌─────────────────┐ │
-    │ │       AuthModule       │ │       UserModule       │ │  BillingModule  │ │
-    │ │ • Authentication       │ │ • Profiles & Accounts  │ │ • Subscriptions │ │
-    │ │ • Session Security     │ │ • Dietary Constraints  │ │ • Payments      │ │
-    │ └────────────────────────┘ └────────────────────────┘ └─────────────────┘ │
-    │ ┌────────────────────────┐ ┌────────────────────────┐ ┌─────────────────┐ │
-    │ │      RecipeModule      │ │       ChatModule       │ │ AssistantModule │ │
-    │ │ • Recipe Management    │ │ • Chat Sessions        │ │ • AI Assistant  │ │
-    │ │ • Hybrid Recipe Search │ │ • Message Handling     │ │ • Tool Execution│ │
-    │ └────────────────────────┘ └────────────────────────┘ └─────────────────┘ │
-    │ ┌────────────────────────┐ ┌────────────────────────┐ ┌─────────────────┐ │
+    ┌─────────────────────────────────────┴──────────────────────────────────────┐
+    │                           NestJS Domain Modules                            │
+    │ ┌────────────────────────┐ ┌────────────────────────┐ ┌──────────────────┐ │
+    │ │       AuthModule       │ │       UserModule       │ │  BillingModule   │ │
+    │ │ • Authentication       │ │ • Profiles & Accounts  │ │ • Subscriptions  │ │
+    │ │ • Session Security     │ │ • Dietary Constraints  │ │ • Payments       │ │
+    │ └────────────────────────┘ └────────────────────────┘ └──────────────────┘ │
+    │ ┌────────────────────────┐ ┌────────────────────────┐ ┌──────────────────┐ │
+    │ │      RecipeModule      │ │       ChatModule       │ │ AssistantModule  │ │
+    │ │ • Recipe Management    │ │ • Chat Sessions        │ │ • AI Assistant   │ │
+    │ │ • Hybrid Recipe Search │ │ • Message Handling     │ │ • Tool Execution │ │
+    │ └────────────────────────┘ └────────────────────────┘ └──────────────────┘ │
+    │ ┌────────────────────────┐ ┌────────────────────────┐ ┌──────────────────┐ │
     │ │    ModerationModule    │ │      ReviewModule      │ │ CollectionModule │ │
-    │ │ • AI Content Safety    │ │ • Reviews & Ratings    │ │ • Saved Recipes │ │
-    │ │                        │ │ • Threaded Comments    │ │                 │ │
-    │ └────────────────────────┘ └────────────────────────┘ └─────────────────┘ │
-    └─────────────────────────────────────┬─────────────────────────────────────┘
+    │ │ • AI Content Safety    │ │ • Reviews & Ratings    │ │ • Saved Recipes  │ │
+    │ │                        │ │ • Threaded Comments    │ │                  │ │
+    │ └────────────────────────┘ └────────────────────────┘ └──────────────────┘ │
+    └─────────────────────────────────────┬──────────────────────────────────────┘
                                           │                           
           ┌─────────────────┬─────────────┴───────────┬──────────────────┐
           │                 │                         │                  │
