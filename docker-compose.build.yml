@@ -1,4 +1,4 @@
-name: smak-culinary-platform-prod
+name: smak-culinary-platform-build
 
 services:
   db:
@@ -38,7 +38,10 @@ services:
     restart: always
 
   api:
-    image: ghcr.io/alukiank/smak-culinary-platform/api:${IMAGE_TAG:-latest}
+    build:
+      context: ./api
+      dockerfile: Dockerfile
+      target: production
     container_name: smak_culinary_platform_api_prod
     depends_on:
       db:
@@ -61,7 +64,12 @@ services:
     restart: always
 
   client:
-    image: ghcr.io/alukiank/smak-culinary-platform/client:${IMAGE_TAG:-latest}
+    build:
+      context: ./client
+      dockerfile: Dockerfile
+      target: production
+      args:
+        NUXT_PUBLIC_API_URL: ${NUXT_PUBLIC_API_URL:-https://api.localhost}
     container_name: smak_culinary_platform_client_prod
     depends_on:
       api:
@@ -75,8 +83,12 @@ services:
     restart: always
 
   site-faq-init:
-    image: ghcr.io/alukiank/smak-culinary-platform/site-faq-init:${IMAGE_TAG:-latest}
+    build:
+      context: ./client
+      dockerfile: Dockerfile
+      target: build
     container_name: smak_culinary_platform_site_faq_init
+    command: sh -c "cp generated/public-site-faq.* /site-faq/"
     volumes:
       - site_faq:/site-faq
     networks:

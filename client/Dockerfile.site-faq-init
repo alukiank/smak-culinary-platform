@@ -1,0 +1,19 @@
+FROM node:20-alpine AS base
+WORKDIR /usr/src/app
+RUN apk add --no-cache libc6-compat
+
+FROM base AS dependencies
+COPY package*.json ./
+RUN npm install
+
+FROM dependencies AS build
+ARG NUXT_PUBLIC_API_URL=https://api.localhost
+ENV NUXT_PUBLIC_API_URL=${NUXT_PUBLIC_API_URL}
+COPY . .
+RUN npm run build
+
+# Final image — only the generated FAQ files on minimal alpine
+FROM alpine:3.20
+WORKDIR /site-faq-src
+COPY --from=build /usr/src/app/generated/public-site-faq.* ./
+CMD ["sh", "-c", "cp /site-faq-src/public-site-faq.* /site-faq/"]
