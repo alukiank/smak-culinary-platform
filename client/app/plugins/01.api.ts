@@ -81,16 +81,20 @@ export default defineNuxtPlugin((nuxtApp) => {
         !opts._retry &&
         !requestUrl.includes('/auth/refresh') &&
         !requestUrl.includes('/auth/login') &&
+        !requestUrl.includes('/auth/signup') &&
+        !requestUrl.includes('/auth/forgot-password') &&
+        !requestUrl.includes('/auth/reset-password') &&
+        !requestUrl.includes('/auth/verify-email') &&
+        !requestUrl.includes('/auth/resend-email-verification') &&
         !requestUrl.includes('/auth/logout')
       ) {
 
         if (isRefreshing) {
-          return new Promise<any>((resolve, reject) => {
+          await new Promise<any>((resolve, reject) => {
             refreshQueue.push({ resolve, reject })
-          }).then(() => {
-            opts._retry = true
-            return baseFetch<T>(request as any, opts as any)
           })
+          opts._retry = true
+          return await baseFetch<T>(request as any, opts as any)
         }
 
         isRefreshing = true

@@ -11,7 +11,7 @@ export class VerificationService {
     private readonly userService: UserService,
     private readonly AuthCacheService: AuthCacheService,
     private readonly eventEmitter: EventEmitter2,
-  ) {}
+  ) { }
 
   async verifyEmail(token: string): Promise<boolean> {
     const userId =

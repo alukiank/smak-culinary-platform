@@ -1,4 +1,5 @@
 import type { UserPrivateDto, UserPublicDto, UserRestrictionsDto, UpdateUserDto, UpdatePasswordDto } from '~/types/user'
+import { formatApiError } from '~/utils/error-handler'
 
 export const useUser = () => {
   const user = useState<UserPrivateDto | null>('auth-user', () => null)
@@ -45,17 +46,17 @@ export const useUser = () => {
       user.value = {
         ...user.value,
         ...data,
-        allergies: updateDto.allergies !== undefined 
-          ? updateDto.allergies 
+        allergies: updateDto.allergies !== undefined
+          ? updateDto.allergies
           : (data.allergies !== undefined ? data.allergies : user.value?.allergies),
-        dietary: updateDto.dietary !== undefined 
-          ? updateDto.dietary 
+        dietary: updateDto.dietary !== undefined
+          ? updateDto.dietary
           : (data.dietary !== undefined ? data.dietary : user.value?.dietary)
       }
       return { success: true, data: user.value }
     } catch (err: any) {
       console.error('Error updating user profile:', err?.message || err)
-      const message = err.data?.message || 'Не вдалося оновити профіль. Перевірте правильність введених даних.'
+      const message = formatApiError(err, 'Не вдалося оновити профіль. Перевірте правильність введених даних.')
       return { success: false, error: message }
     } finally {
       loading.value = false
@@ -96,7 +97,7 @@ export const useUser = () => {
       return { success }
     } catch (err: any) {
       console.error('Error deleting account:', err?.message || err)
-      const message = err.data?.message || 'Не вдалося видалити акаунт. Спробуйте пізніше.'
+      const message = formatApiError(err, 'Не вдалося видалити акаунт. Спробуйте пізніше.')
       return { success: false, error: message }
     } finally {
       loading.value = false
@@ -141,7 +142,7 @@ export const useUser = () => {
       return { success }
     } catch (err: any) {
       console.error('Error changing password:', err?.message || err)
-      const message = err.data?.message || 'Невірний старий пароль або новий пароль не відповідає вимогам безпеки.'
+      const message = formatApiError(err, 'Невірний старий пароль або новий пароль не відповідає вимогам безпеки.')
       return { success: false, error: message }
     } finally {
       loading.value = false

@@ -26,7 +26,7 @@ export class AuthService {
     private readonly tokenService: TokenService,
     private readonly AuthCacheService: AuthCacheService,
     private readonly eventEmitter: EventEmitter2,
-  ) {}
+  ) { }
 
   async signup(
     { username, displayname, email, password }: SignupDto,

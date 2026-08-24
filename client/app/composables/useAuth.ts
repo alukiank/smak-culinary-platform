@@ -1,5 +1,6 @@
 import { computed } from 'vue'
 import type { UserPrivateDto } from '~/types/user'
+import { formatApiError } from '~/utils/error-handler'
 
 // Client-side only promise cache to prevent concurrent race conditions
 let clientFetchPromise: Promise<void> | null = null
@@ -103,7 +104,7 @@ export const useAuth = () => {
       return { success: true }
     } catch (err: any) {
       console.error('Login error:', err?.message || err)
-      const message = err.data?.message || 'Невірний email або пароль'
+      const message = formatApiError(err, 'Невірний email або пароль')
       return { success: false, error: message }
     }
   }
@@ -128,7 +129,7 @@ export const useAuth = () => {
       return { success: true }
     } catch (err: any) {
       console.error('Registration error:', err?.message || err)
-      const message = err.data?.message || 'Помилка реєстрації. Перевірте правильність введених даних'
+      const message = formatApiError(err, 'Помилка реєстрації. Перевірте правильність введених даних')
       return { success: false, error: message }
     }
   }
@@ -184,7 +185,7 @@ export const useAuth = () => {
       return { success: true }
     } catch (err: any) {
       console.error('Forgot password error:', err?.message || err)
-      const message = err.data?.message || 'Користувача з таким email не знайдено'
+      const message = formatApiError(err, 'Користувача з таким email не знайдено')
       return { success: false, error: message }
     }
   }
@@ -201,7 +202,7 @@ export const useAuth = () => {
       return { success: true }
     } catch (err: any) {
       console.error('Reset password error:', err?.message || err)
-      const message = err.data?.message || 'Токен недійсний або прострочений'
+      const message = formatApiError(err, 'Токен недійсний або прострочений')
       return { success: false, error: message }
     }
   }
@@ -222,7 +223,7 @@ export const useAuth = () => {
       return { success: true }
     } catch (err: any) {
       console.error('Verify email error:', err?.message || err)
-      const message = err.data?.message || 'Некоректний або прострочений токен підтвердження'
+      const message = formatApiError(err, 'Некоректний або прострочений токен підтвердження')
       return { success: false, error: message }
     }
   }
@@ -236,7 +237,7 @@ export const useAuth = () => {
       return { success: true }
     } catch (err: any) {
       console.error('Resend verification error:', err?.message || err)
-      const message = err.data?.message || 'Не вдалося надіслати лист. Спробуйте пізніше.'
+      const message = formatApiError(err, 'Не вдалося надіслати лист. Спробуйте пізніше.')
       return { success: false, error: message }
     }
   }

@@ -70,7 +70,7 @@ const handleRegister = async () => {
     })
     navigateTo('/')
   } else {
-    errorMessage.value = res.error || 'Помилка реєстрації. Можливо, такий email або нікнейм уже зайняті'
+    errorMessage.value = res.error || 'Помилка реєстрації. Спробуйте пізніше'
     toast.add({
       title: 'Помилка реєстрації',
       description: errorMessage.value,
@@ -104,7 +104,7 @@ const handleRegister = async () => {
     >
       <div v-if="errorMessage" class="p-3.5 rounded-xl bg-red-50 dark:bg-red-950/40 border border-red-200 dark:border-red-800/60 text-sm font-medium text-red-600 dark:text-red-400 flex items-start gap-2.5">
         <UIcon name="i-lucide-alert-circle" class="w-4.5 h-4.5 shrink-0 mt-0.5 text-red-500" />
-        <span>{{ errorMessage }}</span>
+        <span class="whitespace-pre-line leading-relaxed">{{ errorMessage }}</span>
       </div>
     </Transition>
 

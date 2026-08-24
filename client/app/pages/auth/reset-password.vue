@@ -69,7 +69,7 @@ const handleResetPassword = async () => {
       icon: 'i-lucide-check-circle'
     })
   } else {
-    errorMessage.value = res.error || 'Токен недійсний або прострочений. Спробуйте надіслати запит знову'
+    errorMessage.value = res.error || 'Не вдалося оновити пароль. Спробуйте пізніше'
     toast.add({
       title: 'Помилка скидання',
       description: errorMessage.value,
@@ -124,7 +124,7 @@ const handleResetPassword = async () => {
       >
         <div v-if="errorMessage" class="p-3.5 rounded-xl bg-red-50 dark:bg-red-950/40 border border-red-200 dark:border-red-800/60 text-sm font-medium text-red-600 dark:text-red-400 flex items-start gap-2.5">
           <UIcon name="i-lucide-alert-circle" class="w-4.5 h-4.5 shrink-0 mt-0.5 text-red-500" />
-          <span>{{ errorMessage }}</span>
+          <span class="whitespace-pre-line leading-relaxed">{{ errorMessage }}</span>
         </div>
       </Transition>
 

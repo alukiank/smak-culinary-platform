@@ -124,7 +124,7 @@ const handleResendEmail = async () => {
       </div>
       <div class="space-y-1.5">
         <h3 class="text-2xl font-bold font-heading text-neutral-900 dark:text-white">Помилка підтвердження</h3>
-        <p class="text-sm sm:text-base text-neutral-500 dark:text-neutral-400 leading-relaxed font-normal">
+        <p class="text-sm sm:text-base text-neutral-500 dark:text-neutral-400 leading-relaxed font-normal whitespace-pre-line">
           {{ errorMessage }}
         </p>
       </div>
