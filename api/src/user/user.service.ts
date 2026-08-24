@@ -24,7 +24,7 @@ export class UserService {
     @InjectRepository(User)
     private readonly userRepository: Repository<User>,
     private readonly eventEmitter: EventEmitter2,
-  ) {}
+  ) { }
 
   async findAll(
     searchDto: UserSearchAdminDto,
@@ -147,6 +147,10 @@ export class UserService {
 
   async remove(id: string): Promise<boolean> {
     this.logger.warn(`[User] Deleting user account ID: ${id}`);
+
+    // Notify listeners (e.g., billing to unsubscribe LiqPay recurring orders) before CASCADE deletes relations
+    await this.eventEmitter.emitAsync('user.before_deleted', { userId: id });
+
     const result = await this.userRepository.delete(id);
     if (result.affected === 0) {
       throw new NotFoundException(`User with this ID not found`);

@@ -66,9 +66,36 @@ const handleCarouselScroll = () => {
 }
 
 onMounted(async () => {
-  if (user.value) {
+  const route = useRoute()
+  const router = useRouter()
+
+  if (route.query.payment === 'success') {
+    const toast = useToast()
+    toast.add({
+      title: 'Оплата прийнята!',
+      description: 'Оновлюємо статус вашої підписки...',
+      color: 'success',
+      icon: 'i-lucide-check-circle',
+    })
+
+    // Remove ?payment=success from URL cleanly to avoid re-triggering toast on F5
+    router.replace({ query: { ...route.query, payment: undefined } })
+
+    if (user.value) {
+      let attempts = 0
+      const checkSub = async () => {
+        await fetchSubscription()
+        attempts++
+        if (activePlan.value === 'FREE' && attempts < 4) {
+          setTimeout(checkSub, 1500)
+        }
+      }
+      await checkSub()
+    }
+  } else if (user.value) {
     await fetchSubscription()
   }
+
   if (activePlan.value && ['FREE', 'PRO', 'PREMIUM'].includes(activePlan.value)) {
     scrollToPlan(activePlan.value as 'FREE' | 'PRO' | 'PREMIUM')
   } else {
@@ -174,7 +201,7 @@ const faqs = [
           <span class="bg-brand-gradient bg-clip-text text-transparent" style="-webkit-background-clip: text; background-clip: text;">кулінарної свободи</span>
         </h1>
         <p class="text-sm sm:text-base text-smak-neutral-500 dark:text-smak-neutral-400 leading-relaxed">
-          Прості та прозорі тарифи без прихованих платежів. Скасовуйте або змінюйте план у будь-який момент.
+          Оплата працює у тестовому режимі: реальні кошти не списуються. Для перевірки тарифів використовуйте тестову картку.
         </p>
       </div>
 
@@ -224,7 +251,7 @@ const faqs = [
         <!-- Card: FREE -->
         <div 
           id="plan-card-mobile-FREE"
-          class="snap-center shrink-0 w-[85vw] sm:w-[350px] md:w-auto relative flex flex-col justify-between rounded-2xl sm:rounded-3xl p-5 sm:p-6 border bg-white/60 dark:bg-smak-neutral-900/40 backdrop-blur-xl transition-all duration-300 hover:scale-[1.02] shadow-sm hover:shadow-lg"
+          class="snap-center shrink-0 w-[85vw] sm:w-87.5 md:w-auto relative flex flex-col justify-between rounded-2xl sm:rounded-3xl p-5 sm:p-6 border bg-white/60 dark:bg-smak-neutral-900/40 backdrop-blur-xl transition-all duration-300 hover:scale-[1.02] shadow-sm hover:shadow-lg"
           :class="activePlan === 'FREE' 
             ? 'border-coral-500 dark:border-coral-500/80 ring-2 ring-coral-400/20' 
             : 'border-smak-neutral-200 dark:border-smak-neutral-800'"
@@ -293,19 +320,11 @@ const faqs = [
         <!-- Card: PRO -->
         <div 
           id="plan-card-mobile-PRO"
-          class="snap-center shrink-0 w-[85vw] sm:w-[350px] md:w-auto relative flex flex-col justify-between rounded-2xl sm:rounded-3xl p-5 sm:p-6 border bg-white/95 dark:bg-smak-neutral-900/80 backdrop-blur-xl transition-all duration-300 hover:scale-[1.03] shadow-md hover:shadow-xl"
+          class="snap-center shrink-0 w-[85vw] sm:w-87.5 md:w-auto relative flex flex-col justify-between rounded-2xl sm:rounded-3xl p-5 sm:p-6 border bg-white/95 dark:bg-smak-neutral-900/80 backdrop-blur-xl transition-all duration-300 hover:scale-[1.03] shadow-md hover:shadow-xl"
           :class="activePlan === 'PRO' 
             ? 'border-coral-500 dark:border-coral-500/80 ring-2 ring-coral-400/20' 
             : 'border-orange-200 dark:border-orange-950/30'"
         >
-          <!-- Recommended Ribbon -->
-          <span 
-            class="absolute -top-3 px-3.5 py-0.5 rounded-full bg-brand-gradient text-white text-[10px] font-black uppercase tracking-widest shadow-xs"
-            :class="activePlan === 'PRO' ? 'right-4' : 'left-1/2 -translate-x-1/2'"
-          >
-            Популярний вибір
-          </span>
-
           <span v-if="activePlan === 'PRO'" class="absolute -top-3 left-4 px-3 py-0.5 rounded-full bg-coral-500 text-white text-[10px] font-extrabold uppercase tracking-wider shadow-xs">
             Ваш тариф
           </span>
@@ -384,7 +403,7 @@ const faqs = [
         <!-- Card: PREMIUM -->
         <div 
           id="plan-card-mobile-PREMIUM"
-          class="snap-center shrink-0 w-[85vw] sm:w-[350px] md:w-auto relative flex flex-col justify-between rounded-2xl sm:rounded-3xl p-5 sm:p-6 border bg-white/60 dark:bg-smak-neutral-900/40 backdrop-blur-xl transition-all duration-300 hover:scale-[1.02] shadow-sm hover:shadow-lg"
+          class="snap-center shrink-0 w-[85vw] sm:w-87.5 md:w-auto relative flex flex-col justify-between rounded-2xl sm:rounded-3xl p-5 sm:p-6 border bg-white/60 dark:bg-smak-neutral-900/40 backdrop-blur-xl transition-all duration-300 hover:scale-[1.02] shadow-sm hover:shadow-lg"
           :class="activePlan === 'PREMIUM' 
             ? 'border-indigo-500 dark:border-indigo-500/80 ring-2 ring-indigo-400/20' 
             : 'border-smak-neutral-200 dark:border-smak-neutral-800'"
@@ -562,7 +581,7 @@ const faqs = [
           </div>
           <NuxtLink
             to="/auth/register"
-            class="h-[42px] px-5 rounded-full font-bold text-sm sm:text-base border border-smak-neutral-200 dark:border-smak-neutral-800 bg-transparent hover:bg-transparent hover:border-coral-500 text-smak-neutral-800 dark:text-smak-neutral-200 hover:text-coral-500 transition-all cursor-pointer hidden sm:inline-flex items-center justify-center gap-2 shrink-0"
+            class="h-10.5 px-5 rounded-full font-bold text-sm sm:text-base border border-smak-neutral-200 dark:border-smak-neutral-800 bg-transparent hover:bg-transparent hover:border-coral-500 text-smak-neutral-800 dark:text-smak-neutral-200 hover:text-coral-500 transition-all cursor-pointer hidden sm:inline-flex items-center justify-center gap-2 shrink-0"
           >
             <span>Є питання? Пишіть нам</span>
           </NuxtLink>

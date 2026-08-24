@@ -4,6 +4,7 @@ import {
   BadRequestException,
   Logger,
 } from '@nestjs/common';
+import { ConfigService } from '@nestjs/config';
 import { PaginationDto } from '../../shared/dto/pagination.dto';
 import { PaginatedResponseDto } from '../../shared/dto/paginated-response.dto';
 import { PaginationMetaDto } from '../../shared/dto/pagination-meta.dto';
@@ -26,6 +27,7 @@ export class SubscriptionService {
     @InjectRepository(Subscription)
     private readonly subscriptionRepository: Repository<Subscription>,
     private readonly liqPayService: LiqPayService,
+    private readonly configService: ConfigService,
   ) {}
 
   async findAll(
@@ -117,6 +119,11 @@ export class SubscriptionService {
     const plan = PLAN_CONFIGS[planType];
     const orderId = `sub_${userId}_${planType}_${uuidv4()}`;
 
+    const frontendUrl = this.configService.get<string>('FRONTEND_URL') || '';
+    const resultUrl = frontendUrl
+      ? `${frontendUrl.replace(/\/$/, '')}/billing/plans?payment=success`
+      : undefined;
+
     const { data, signature } = this.liqPayService.createCheckoutParams({
       orderId,
       amount: plan.price,
@@ -124,6 +131,7 @@ export class SubscriptionService {
       description: `Subscription ${plan.name} - ${plan.price} UAH/month`,
       action: 'subscribe',
       subscribePeriodicity: 'month',
+      resultUrl,
     });
 
     const checkoutUrl = `https://www.liqpay.ua/api/3/checkout?data=${data}&signature=${signature}`;
@@ -137,6 +145,18 @@ export class SubscriptionService {
     liqpayOrderId: string,
   ): Promise<Subscription> {
     let sub = await this.subscriptionRepository.findOne({ where: { userId } });
+
+    // If upgrading/changing plan with an existing active LiqPay recurring subscription, cancel the previous one
+    if (sub && sub.liqpayOrderId && sub.liqpayOrderId !== liqpayOrderId) {
+      this.logger.log(
+        `[Subscription] User ${userId} is changing plan/order. Unsubscribing previous LiqPay order: ${sub.liqpayOrderId}`,
+      );
+      await this.liqPayService.unsubscribe(sub.liqpayOrderId).catch((err) => {
+        this.logger.warn(
+          `[Subscription] Failed to unsubscribe previous LiqPay order ${sub.liqpayOrderId}: ${err.message}`,
+        );
+      });
+    }
 
     const currentPeriodEnd = new Date();
     currentPeriodEnd.setMonth(currentPeriodEnd.getMonth() + 1);
@@ -173,6 +193,17 @@ export class SubscriptionService {
       throw new BadRequestException('FREE plan cant be cancelled.');
     }
 
+    if (sub.liqpayOrderId) {
+      this.logger.log(
+        `[Subscription] Cancelling LiqPay recurring order ${sub.liqpayOrderId} for user ${userId}`,
+      );
+      await this.liqPayService.unsubscribe(sub.liqpayOrderId).catch((err) => {
+        this.logger.warn(
+          `[Subscription] Failed to unsubscribe LiqPay order ${sub.liqpayOrderId}: ${err.message}`,
+        );
+      });
+    }
+
     sub.status = SubscriptionStatus.CANCELED;
     const saved = await this.subscriptionRepository.save(sub);
     this.logger.log(
@@ -181,10 +212,75 @@ export class SubscriptionService {
     return saved;
   }
 
+  async handleUserDeleted(userId: string): Promise<void> {
+    try {
+      const sub = await this.subscriptionRepository.findOne({
+        where: { userId },
+      });
+      if (
+        sub &&
+        sub.liqpayOrderId &&
+        sub.status === SubscriptionStatus.ACTIVE
+      ) {
+        this.logger.log(
+          `[Subscription] User ${userId} deleted. Unsubscribing active LiqPay order: ${sub.liqpayOrderId}`,
+        );
+        await this.liqPayService.unsubscribe(sub.liqpayOrderId);
+      }
+    } catch (error) {
+      this.logger.error(
+        `[Subscription] Failed to unsubscribe LiqPay on user deletion for ${userId}: ${error.message}`,
+        error.stack,
+      );
+    }
+  }
+
+  async findByLiqPayOrderId(liqpayOrderId: string): Promise<Subscription | null> {
+    return this.subscriptionRepository.findOne({
+      where: { liqpayOrderId },
+    });
+  }
+
+  async handleReversedPayment(
+    userId: string,
+    orderId?: string,
+  ): Promise<Subscription | null> {
+    try {
+      const sub = await this.subscriptionRepository.findOne({
+        where: { userId },
+      });
+      if (sub) {
+        if (sub.liqpayOrderId) {
+          await this.liqPayService.unsubscribe(sub.liqpayOrderId).catch(() => {});
+        }
+        sub.status = SubscriptionStatus.CANCELED;
+        sub.planType = PlanType.FREE;
+        const saved = await this.subscriptionRepository.save(sub);
+        this.logger.warn(
+          `[Subscription] Payment REVERSED/REFUNDED for user ${userId} (order ${orderId}). Reverted subscription to FREE/CANCELED.`,
+        );
+        return saved;
+      }
+    } catch (error) {
+      this.logger.error(
+        `[Subscription] Failed to handle reversed payment for user ${userId}: ${error.message}`,
+        error.stack,
+      );
+    }
+    return null;
+  }
+
   async renewSubscription(userId: string): Promise<Subscription> {
     const sub = await this.findByUserId(userId);
 
-    const currentPeriodEnd = new Date();
+    const now = new Date();
+    // If the current period hasn't ended yet, extend from currentPeriodEnd, otherwise from now
+    const baseDate =
+      sub.currentPeriodEnd && new Date(sub.currentPeriodEnd) > now
+        ? new Date(sub.currentPeriodEnd)
+        : now;
+
+    const currentPeriodEnd = new Date(baseDate);
     currentPeriodEnd.setMonth(currentPeriodEnd.getMonth() + 1);
 
     sub.status = SubscriptionStatus.ACTIVE;

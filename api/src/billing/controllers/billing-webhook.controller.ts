@@ -69,8 +69,19 @@ export class BillingWebhookController {
       return { status: 'already_processed' };
     }
 
-    const userId = this.extractUserIdFromOrderId(callbackData.order_id);
-    const planType = this.extractPlanTypeFromOrderId(callbackData.order_id);
+    let userId = this.extractUserIdFromOrderId(callbackData.order_id);
+    let planType = this.extractPlanTypeFromOrderId(callbackData.order_id);
+
+    // Fallback: If order_id doesn't match standard prefix (e.g. regular renewals or modified order_id)
+    if (!userId) {
+      const existingSub = await this.subscriptionService.findByLiqPayOrderId(
+        callbackData.order_id,
+      );
+      if (existingSub) {
+        userId = existingSub.userId;
+        planType = existingSub.planType;
+      }
+    }
 
     await this.paymentService.createFromCallback(callbackData, userId);
 
@@ -96,6 +107,13 @@ export class BillingWebhookController {
             `[LiqPay Webhook] Subscription ACTIVATED for user: ${userId}, plan: ${planType}`,
           );
         }
+      }
+    } else if (callbackData.status === 'reversed') {
+      if (userId) {
+        await this.subscriptionService.handleReversedPayment(
+          userId,
+          callbackData.order_id,
+        );
       }
     } else {
       this.logger.warn(

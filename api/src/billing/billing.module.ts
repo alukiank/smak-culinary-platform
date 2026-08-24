@@ -11,6 +11,7 @@ import { SubscriptionService } from './services/subscription.service';
 import { PaymentService } from './services/payment.service';
 import { SubscriptionExpiryTask } from './tasks/subscription-expiry.task';
 import { UserRegisteredListener } from './listeners/user-registered.listener';
+import { UserDeletedSubscriptionListener } from './listeners/user-deleted-subscription.listener';
 
 @Module({
   imports: [
@@ -28,6 +29,7 @@ import { UserRegisteredListener } from './listeners/user-registered.listener';
     PaymentService,
     SubscriptionExpiryTask,
     UserRegisteredListener,
+    UserDeletedSubscriptionListener,
   ],
   exports: [SubscriptionService, PaymentService],
 })
