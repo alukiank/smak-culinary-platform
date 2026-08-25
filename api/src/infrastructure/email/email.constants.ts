@@ -1,3 +1,3 @@
 export const EMAIL_CONSTANTS = {
-  DEFAULT_FROM: '"No Reply" <noreply@example.com>',
+  DEFAULT_FROM: '"Smak" <noreply@smak-app.pp.ua>',
 } as const;

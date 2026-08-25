@@ -19,7 +19,10 @@ import { EMAIL_CONSTANTS } from './email.constants';
           },
         },
         defaults: {
-          from: EMAIL_CONSTANTS.DEFAULT_FROM,
+          from:
+            config.get('MAIL_FROM') ||
+            EMAIL_CONSTANTS.DEFAULT_FROM ||
+            '"Smak" <noreply@smak-app.pp.ua>',
         },
       }),
       inject: [ConfigService],
