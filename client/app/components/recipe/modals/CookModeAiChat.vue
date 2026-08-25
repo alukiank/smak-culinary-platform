@@ -311,7 +311,16 @@ onMounted(async () => {
     <div class="absolute top-0 left-0 right-0 h-6 bg-white dark:bg-smak-neutral-900 z-20 pointer-events-none rounded-t-3xl"></div>
     <div class="absolute top-6 left-0 right-0 h-8 bg-linear-to-b from-white to-transparent dark:from-smak-neutral-900 dark:to-transparent z-20 pointer-events-none"></div>
 
-    <!-- Quick actions removed from the top; now rendered dynamically above the input area -->
+    <!-- Mobile Close Button (Top right) -->
+    <button
+      v-if="hideHeader"
+      type="button"
+      @click="emit('close')"
+      class="sm:hidden absolute top-3 right-3.5 z-30 w-9 h-9 rounded-full bg-white hover:bg-smak-neutral-100 dark:bg-white dark:hover:bg-smak-neutral-100 text-smak-neutral-800 dark:text-smak-neutral-900 flex items-center justify-center transition-all duration-200 cursor-pointer shadow-md border border-smak-neutral-200/80 active:scale-95"
+      aria-label="Закрити чат"
+    >
+      <UIcon name="i-lucide-x" class="w-5 h-5 stroke-[2.5]" />
+    </button>
 
     <!-- ── Messages area ───────────────────────────────────────────────── -->
     <div class="flex-1 overflow-y-auto px-4 pt-9 pb-3 space-y-3.5 scrollbar-none flex flex-col chat-fade-mask">
@@ -360,7 +369,7 @@ onMounted(async () => {
     </div>
 
     <!-- ── Input area ──────────────────────────────────────────────────── -->
-    <div class="px-4 sm:px-3.5 pb-6 sm:pb-3.5 pt-2 shrink-0 border-t border-smak-neutral-100/60 dark:border-smak-neutral-850 bg-white dark:bg-smak-neutral-950 flex flex-col transition-all duration-300">
+    <div class="px-4 sm:px-3.5 pb-[max(0.75rem,env(safe-area-inset-bottom,0px))] sm:pb-3.5 pt-2.5 shrink-0 border-t border-smak-neutral-100/60 dark:border-smak-neutral-850 bg-white dark:bg-smak-neutral-950 flex flex-col transition-all duration-300">
       <!-- AI Limit Reached Warning Banner -->
       <div
         v-if="isAiLimitReached"
@@ -412,9 +421,9 @@ onMounted(async () => {
         </div>
       </Transition>
 
-      <!-- Message Input Row (Exact 56px height h-14 with mr-18 right margin for FAB clearance gap) -->
+      <!-- Message Input Row (Full width on mobile and desktop) -->
       <div
-        class="h-14 flex items-center gap-2 bg-smak-neutral-50/80 dark:bg-smak-neutral-900/80 border border-smak-neutral-200 dark:border-smak-neutral-800 rounded-full sm:rounded-2xl px-4 py-2 transition-all duration-300 focus-within:ring-2 focus-within:ring-ai-indigo-500/20 focus-within:border-ai-indigo-500/50 shadow-xs mr-18 sm:mr-0"
+        class="h-14 flex items-center gap-2 bg-smak-neutral-50/80 dark:bg-smak-neutral-900/80 border border-smak-neutral-200 dark:border-smak-neutral-800 rounded-full sm:rounded-2xl px-4 py-2 transition-all duration-300 focus-within:ring-2 focus-within:ring-ai-indigo-500/20 focus-within:border-ai-indigo-500/50 shadow-xs w-full"
         :class="{
           'border-ai-indigo-500/50': inputText.trim(),
           'opacity-60 pointer-events-none': isAiLimitReached
@@ -434,7 +443,7 @@ onMounted(async () => {
         <button
           @click="sendMessage"
           :disabled="!inputText.trim() || isStreaming || !chatId || isAiLimitReached"
-          class="sm:hidden w-8.5 h-8.5 rounded-xl flex items-center justify-center transition-all duration-300 shrink-0 cursor-pointer focus:outline-none disabled:opacity-40 disabled:cursor-not-allowed bg-ai-indigo-500 hover:bg-ai-indigo-600 text-white shadow-sm hover:shadow-md hover:shadow-ai-indigo-500/20"
+          class="w-8.5 h-8.5 rounded-xl flex items-center justify-center transition-all duration-300 shrink-0 cursor-pointer focus:outline-none disabled:opacity-40 disabled:cursor-not-allowed bg-ai-indigo-500 hover:bg-ai-indigo-600 text-white shadow-sm hover:shadow-md hover:shadow-ai-indigo-500/20"
         >
           <UIcon name="i-lucide-send-horizontal" class="w-4.5 h-4.5" />
         </button>
