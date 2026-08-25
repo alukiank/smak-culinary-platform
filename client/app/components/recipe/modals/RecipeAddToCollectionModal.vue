@@ -59,10 +59,14 @@ const handleToggleCollection = async (collection: RecipeCollectionResponseDto) =
 const handleClose = () => {
   emit('close')
 }
+
+const preventMobileAutoFocus = (e: Event) => {
+  if (import.meta.client && 'ontouchstart' in globalThis) e.preventDefault()
+}
 </script>
 
 <template>
-  <UModal :ui="{ content: 'sm:max-w-md rounded-3xl overflow-hidden' }">
+  <UModal :ui="{ content: 'sm:max-w-md rounded-3xl overflow-hidden' }" :content="{ onOpenAutoFocus: preventMobileAutoFocus }">
     <template #content>
       <div class="bg-white dark:bg-smak-neutral-900 shadow-2xl relative overflow-hidden flex flex-col max-h-[90vh]">
         <!-- Background Decoration (Subtle) -->

@@ -105,7 +105,7 @@ const faqs = [
       </div>
 
       <!-- MOBILE FULL-SCREEN HERO WITH DARK TOP & BOTTOM DISH (sm:hidden) -->
-      <div class="sm:hidden relative w-full overflow-hidden bg-black text-white min-h-[calc(100svh-4rem)] flex flex-col justify-between pb-6 px-5">
+      <div class="sm:hidden relative w-full overflow-hidden bg-black text-white min-h-[calc(100svh-18rem)] flex flex-col justify-between pb-6 px-5">
         <!-- 9:16 Background Image with Dark Top Space & Bottom Food Bowl -->
         <img 
           src="/images/mobile_hero_dark_dish.jpg" 
@@ -116,7 +116,7 @@ const faqs = [
         <div class="absolute inset-0 bg-linear-to-b from-black/65 via-black/25 to-black/50 pointer-events-none"></div>
 
         <!-- Text Content: Aligned to the top -->
-        <div class="relative z-10 w-full flex flex-col items-center justify-start text-center space-y-3.5 pt-30 px-2">
+        <div class="relative z-10 w-full flex flex-col items-center justify-start text-center space-y-3.5 pt-6 px-2">
           <h1 class="text-4xl font-black font-heading leading-tight text-white tracking-tight drop-shadow-[0_2px_14px_rgba(0,0,0,0.95)]">
             Відкрийте світ <br />
             <span class="text-coral-500 font-black drop-shadow-[0_2px_10px_rgba(0,0,0,0.9)]">смаку</span> разом з нами!

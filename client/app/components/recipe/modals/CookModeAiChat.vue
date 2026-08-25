@@ -363,7 +363,7 @@ onMounted(async () => {
     </div>
 
     <!-- ── Input area ──────────────────────────────────────────────────── -->
-    <div class="px-4 sm:px-3.5 pb-6 sm:pb-3.5 pt-2 shrink-0 border-t border-smak-neutral-100/60 dark:border-smak-neutral-850 bg-white dark:bg-smak-neutral-950 flex flex-col transition-all duration-300">
+    <div class="px-4 sm:px-3.5 pt-2 shrink-0 border-t border-smak-neutral-100/60 dark:border-smak-neutral-850 bg-white dark:bg-smak-neutral-950 flex flex-col transition-all duration-300 chat-input-area">
       <!-- AI Limit Reached Warning Banner -->
       <div
         v-if="isAiLimitReached"
@@ -489,6 +489,16 @@ onMounted(async () => {
 }
 .dark .custom-scrollbar::-webkit-scrollbar-thumb {
   background: rgba(255, 255, 255, 0.1);
+}
+
+/* Safe-area-aware bottom padding for the input area */
+.chat-input-area {
+  padding-bottom: max(1.5rem, env(safe-area-inset-bottom, 1.5rem));
+}
+@media (min-width: 640px) {
+  .chat-input-area {
+    padding-bottom: 0.875rem;
+  }
 }
 </style>
 

@@ -308,6 +308,10 @@ const confirmDeleteChat = async () => {
 }
 
 
+const preventMobileAutoFocus = (e: Event) => {
+  if (import.meta.client && 'ontouchstart' in globalThis) e.preventDefault()
+}
+
 </script>
 
 <template>
@@ -433,10 +437,10 @@ const confirmDeleteChat = async () => {
               <span>Цей чат архівовано. Ви можете читати повідомлення, але не можете надсилати нові.</span>
             </div>
 
-            <!-- Input wrapper + History Button (Height: 52px, Tight Gap: gap-2) -->
-            <div class="flex items-center gap-2">
+            <!-- Input wrapper + History Button -->
+            <div class="flex items-center gap-2 sm:gap-2.5">
               <div
-                class="flex-1 flex items-center gap-3 pl-5 pr-1.5 py-1.5 rounded-full border transition-all duration-200 bg-white dark:bg-smak-neutral-800/60 min-h-13"
+                class="flex-1 min-w-0 flex items-center gap-2 sm:gap-3 pl-4 sm:pl-5 pr-1.5 py-1.5 rounded-full border transition-all duration-200 bg-white dark:bg-smak-neutral-800/60 min-h-12 sm:min-h-13"
                 :class="isAiLimitReached || (currentChat?.isArchived && chatId)
                   ? 'border-smak-neutral-100 dark:border-smak-neutral-800 opacity-60 pointer-events-none'
                   : 'border-smak-neutral-200 dark:border-smak-neutral-700 focus-within:border-ai-indigo-400 dark:focus-within:border-ai-indigo-600 focus-within:shadow-md focus-within:shadow-ai-indigo-500/10'"
@@ -447,14 +451,14 @@ const confirmDeleteChat = async () => {
                   v-model="messageInput"
                   placeholder="Запитайте про рецепт, інгредієнти або кулінарні поради..."
                   rows="1"
-                  class="flex-1 min-w-0 resize-none bg-transparent text-[17px] sm:text-[18px] text-smak-neutral-800 dark:text-smak-neutral-100 placeholder:text-[15px] sm:placeholder:text-[17px] placeholder-smak-neutral-400 dark:placeholder-smak-neutral-500 focus:outline-none leading-relaxed py-1"
-                  style="max-height: 150px; min-height: 28px;"
+                  class="flex-1 min-w-0 resize-none bg-transparent text-[15px] sm:text-base md:text-[17px] text-smak-neutral-800 dark:text-smak-neutral-100 placeholder:text-[14px] sm:placeholder:text-[15px] md:placeholder:text-base placeholder-smak-neutral-400 dark:placeholder-smak-neutral-500 focus:outline-none leading-relaxed py-1 placeholder:truncate placeholder:whitespace-nowrap"
+                  style="max-height: 150px; min-height: 26px;"
                   :disabled="!!(currentChat?.isArchived && chatId) || isStreaming || isAiLimitReached"
                   @keydown="handleKeydown"
                   @input="autoResize"
                 />
 
-                <div class="shrink-0 flex items-center gap-1.5">
+                <div class="shrink-0 flex items-center gap-1 sm:gap-1.5">
                   <span class="hidden sm:block text-xs text-smak-neutral-300 dark:text-smak-neutral-600 font-bold">
                     ↵
                   </span>
@@ -464,7 +468,7 @@ const confirmDeleteChat = async () => {
                     size="sm"
                     variant="solid"
                     :color="canSend ? undefined : 'neutral'"
-                    class="rounded-full font-bold h-10 w-10 p-0 flex items-center justify-center transition-all duration-200 cursor-pointer"
+                    class="rounded-full font-bold h-9 w-9 sm:h-10 sm:w-10 p-0 flex items-center justify-center transition-all duration-200 cursor-pointer shrink-0"
                     :class="canSend
                       ? 'bg-ai-indigo-500 hover:bg-ai-indigo-600 text-white shadow-md shadow-ai-indigo-500/25 hover:scale-105'
                       : ''"
@@ -474,20 +478,20 @@ const confirmDeleteChat = async () => {
                     @click="handleSend"
                   >
                     <template #leading>
-                      <UIcon name="i-lucide-send" class="w-4.5 h-4.5" />
+                      <UIcon name="i-lucide-send" class="w-4 h-4 sm:w-4.5 sm:h-4.5" />
                     </template>
                   </UButton>
                 </div>
               </div>
 
-              <!-- History / Search Chat Modal Toggle Button (Identical border to input) -->
+              <!-- History / Search Chat Modal Toggle Button -->
               <button
                 type="button"
-                class="rounded-full shrink-0 h-13 w-13 flex items-center justify-center cursor-pointer hover:border-coral-400 hover:text-coral-500 transition-all bg-white dark:bg-smak-neutral-800/60 border border-smak-neutral-200 dark:border-smak-neutral-700 outline-none"
+                class="rounded-full shrink-0 h-12 w-12 sm:h-13 sm:w-13 flex items-center justify-center cursor-pointer hover:border-coral-400 hover:text-coral-500 transition-all bg-white dark:bg-smak-neutral-800/60 border border-smak-neutral-200 dark:border-smak-neutral-700 outline-none"
                 aria-label="Історія чатів"
                 @click="() => { isChatHistoryModalOpen = true }"
               >
-                <UIcon name="i-lucide-history" class="w-5.5 h-5.5 text-coral-500" />
+                <UIcon name="i-lucide-history" class="w-5 h-5 sm:w-5.5 sm:h-5.5 text-coral-500" />
               </button>
             </div>
 
@@ -506,6 +510,7 @@ const confirmDeleteChat = async () => {
       :ui="{
         content: 'sm:max-w-xl rounded-3xl border border-smak-neutral-200 dark:border-smak-neutral-800 bg-white dark:bg-smak-neutral-900 shadow-2xl p-5 sm:p-6 overflow-hidden'
       }"
+      :content="{ onOpenAutoFocus: preventMobileAutoFocus }"
     >
       <template #content>
         <div class="space-y-4 p-1">
@@ -520,7 +525,6 @@ const confirmDeleteChat = async () => {
               :ui="{
                 base: 'rounded-full bg-smak-neutral-100 dark:bg-smak-neutral-800/80 border-0 py-3 px-5 text-base sm:text-[17px] font-semibold placeholder:text-[15px] sm:placeholder:text-base placeholder:text-smak-neutral-400 focus-visible:ring-2 focus-visible:ring-coral-400'
               }"
-              autofocus
             />
           </div>
 
@@ -625,6 +629,11 @@ const confirmDeleteChat = async () => {
 </template>
 
 <style scoped>
+#chat-message-input::placeholder {
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
 </style>
 
 

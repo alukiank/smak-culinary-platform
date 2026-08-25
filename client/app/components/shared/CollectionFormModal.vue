@@ -34,10 +34,14 @@ const handleSubmit = async () => {
     isLoading.value = false
   }
 }
+
+const preventMobileAutoFocus = (e: Event) => {
+  if (import.meta.client && 'ontouchstart' in globalThis) e.preventDefault()
+}
 </script>
 
 <template>
-  <UModal :title="title" :ui="{ content: 'sm:max-w-md rounded-3xl' }">
+  <UModal :title="title" :ui="{ content: 'sm:max-w-md rounded-3xl' }" :content="{ onOpenAutoFocus: preventMobileAutoFocus }">
     <template #content>
       <div class="p-6 sm:p-8 space-y-6">
         <div class="space-y-2">
