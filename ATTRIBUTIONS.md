@@ -24,18 +24,16 @@ The following background banners and UI illustrations were generated using Googl
 - `client/public/images/cooking_banner_bg.png` — Hero section culinary background
 - `client/public/images/food_ingredients_banner.png` — Ingredients illustration banner
 - `client/public/images/smak-auth-food-banner.jpg` — Authentication page food background
-- `client/public/images/mobile_hero_dish.jpg` — Mobile landing page hero dish
+- `client/public/images/mobile_hero_dark_dish.jpg` — Mobile landing page hero dark dish
 - `client/public/images/auth_slide_2.png` — Authentication page slideshow visual
 
+
 ### Stock Photography (Pexels)
-The following stock photos are sourced from [Pexels](https://www.pexels.com) and used under the [Pexels License](https://www.pexels.com/license/), which permits free commercial and non-commercial use without attribution (attribution provided here voluntarily as good practice):
+The following stock photo is sourced from [Pexels](https://www.pexels.com) and used under the [Pexels License](https://www.pexels.com/license/), which permits free commercial and non-commercial use without attribution (attribution provided here voluntarily as good practice). The photo has been optimized and compressed for fast web performance:
 
 | File | Photographer | Source |
 |------|-------------|--------|
-| `pexels-cup-of-couple-7660436.jpg` | Cup of Couple | [Pexels Photo 7660436](https://www.pexels.com/photo/7660436) |
-| `pexels-dhiraj-jain-207743066-12737657.jpg` | Dhiraj Jain | [Pexels Photo 12737657](https://www.pexels.com/photo/12737657) |
-| `pexels-furkanfdemir-10821331.jpg` | furkanfdemir | [Pexels Photo 10821331](https://www.pexels.com/photo/10821331) |
-| `pexels-numangilgil-19917465.jpg` | Numan Gilgil | [Pexels Photo 19917465](https://www.pexels.com/photo/19917465) |
+| `client/public/images/pexels-dhiraj-jain-207743066-12737657.jpg` | Dhiraj Jain | [Pexels Photo 12737657](https://www.pexels.com/photo/12737657) |
 
 ## 4. Documentation Assets
 

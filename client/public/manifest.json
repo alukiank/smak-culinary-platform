@@ -1,0 +1,22 @@
+{
+  "name": "SMAK — Кулінарна платформа",
+  "short_name": "SMAK",
+  "description": "Кулінарна платформа з AI-шефом, персоналізованими рецептами та колекціями",
+  "start_url": "/",
+  "display": "standalone",
+  "background_color": "#FFFFFF",
+  "theme_color": "#F05B5B",
+  "icons": [
+    {
+      "src": "/images/logo.png",
+      "sizes": "192x192 512x512",
+      "type": "image/png",
+      "purpose": "any maskable"
+    },
+    {
+      "src": "/apple-touch-icon.png",
+      "sizes": "180x180",
+      "type": "image/png"
+    }
+  ]
+}

@@ -198,7 +198,7 @@ const faqs = [
       <div class="text-center max-w-2xl mx-auto space-y-1.5 sm:space-y-2">
         <h1 class="text-3xl sm:text-4xl font-black font-heading text-smak-neutral-900 dark:text-white leading-tight">
           Оберіть свій рівень <br />
-          <span class="bg-brand-gradient bg-clip-text text-transparent" style="-webkit-background-clip: text; background-clip: text;">кулінарної свободи</span>
+          <span class="text-coral-500">кулінарної свободи</span>
         </h1>
         <p class="text-sm sm:text-base text-smak-neutral-500 dark:text-smak-neutral-400 leading-relaxed">
           Оплата працює у тестовому режимі: реальні кошти не списуються. Для перевірки тарифів використовуйте тестову картку.

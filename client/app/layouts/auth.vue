@@ -20,8 +20,7 @@ const foodImages = [
   '/images/auth_slide_2.png',
   '/images/food_ingredients_banner.png',
   '/images/pexels-dhiraj-jain-207743066-12737657.jpg',
-  '/images/smak-auth-food-banner.jpg',
-  '/images/pexels-numangilgil-19917465.jpg'
+  '/images/smak-auth-food-banner.jpg'
 ]
 
 const currentImageIndex = ref(0)
@@ -156,7 +155,7 @@ const bannerQuote = computed(() => {
 
           <!-- Footer Copyright Notice -->
           <div class="mt-8 text-center text-xs text-smak-neutral-400 dark:text-smak-neutral-500">
-            © {{ new Date().getFullYear() }} SMAK Culinary Platform. Всі права захищено.
+            © {{ new Date().getFullYear() }} SMAK. Всі права захищено.
           </div>
 
         </div>

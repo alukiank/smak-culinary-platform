@@ -380,7 +380,7 @@ useSeoMeta({
       
       <h1 class="font-heading font-black text-3xl sm:text-4xl leading-tight text-smak-neutral-900 dark:text-white">
         Кулінарний путівник
-        <span class="bg-linear-to-r from-coral-500 via-orange-500 to-yellow-500 bg-clip-text text-transparent filter drop-shadow-xs">
+        <span class="text-coral-500">
           вашої мрії
         </span>
       </h1>

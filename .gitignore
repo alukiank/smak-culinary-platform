@@ -33,3 +33,5 @@ Thumbs.db
 # ======================================
 dataset/
 *.zip
+email-previews/
+

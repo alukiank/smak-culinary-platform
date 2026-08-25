@@ -554,7 +554,7 @@ const dropdownItems = computed(() => {
         <!-- Bottom Copyright strip -->
         <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8 flex flex-col md:flex-row items-center justify-between gap-4 text-xs text-smak-neutral-400 dark:text-smak-neutral-500 font-medium">
           <div class="flex flex-col sm:flex-row sm:items-center gap-2 sm:gap-4 text-center sm:text-left">
-            <span>&copy; {{ new Date().getFullYear() }} SMAK. Всі права захищено.</span>
+            <span>© {{ new Date().getFullYear() }} SMAK. Всі права захищено.</span>
           </div>
           <span class="flex items-center gap-1.5 font-medium">Зроблено з любов'ю до Вас <UIcon name="i-lucide-heart" class="w-4 h-4 text-coral-500 animate-pulse" /></span>
         </div>

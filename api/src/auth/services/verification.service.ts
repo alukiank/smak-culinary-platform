@@ -44,6 +44,7 @@ export class VerificationService {
     this.eventEmitter.emit('user.resend-verification-requested', {
       email: user.email,
       token: verificationToken,
+      userName: user.displayname || user.username,
     });
 
     return true;
@@ -61,6 +62,7 @@ export class VerificationService {
     this.eventEmitter.emit('user.password-reset-requested', {
       email: user.email,
       token: resetToken,
+      userName: user.displayname || user.username,
     });
 
     return true;
@@ -73,10 +75,17 @@ export class VerificationService {
     }
 
     const passwordHash = await argon2.hash(newPassword);
-    await this.userService.update(userId, { passwordHash });
+    const updatedUser = await this.userService.update(userId, { passwordHash });
 
     await this.AuthCacheService.deleteToken('reset-password', token);
     await this.AuthCacheService.invalidateUserSession(userId);
+
+    const user = updatedUser || (await this.userService.findOne({ id: userId }));
+    if (user) {
+      this.eventEmitter.emit('user.password.updated', user);
+    }
+
     return true;
   }
 }
+

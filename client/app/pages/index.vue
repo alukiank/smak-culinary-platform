@@ -50,132 +50,159 @@ const faqs = [
 <template>
   <div class="overflow-x-hidden bg-white dark:bg-smak-neutral-950 transition-colors duration-500 pb-16">
 
-    <!-- ===== 1. HERO BANNER SECTION (FULL WIDTH & EDGE-TO-EDGE ON MOBILE) ===== -->
-    <section class="max-w-7xl mx-auto px-0 sm:px-6 lg:px-8 pt-0 sm:pt-6 pb-4 sm:pb-6">
-      <div class="relative rounded-none sm:rounded-[2.5rem] overflow-hidden bg-linear-to-br from-smak-neutral-950 via-smak-neutral-900 to-smak-neutral-950 text-white min-h-110 sm:min-h-120 lg:min-h-130 flex items-center shadow-2xl border-y sm:border border-smak-neutral-800/60">
-        
-        <!-- Background Image Container filling full right side & responsive mobile background (No mobile darkening overlay) -->
+    <!-- ===== 1. HERO BANNER SECTION ===== -->
+    <section class="max-w-7xl mx-auto px-0 sm:px-6 lg:px-8 pt-0 sm:pt-6 pb-0 sm:pb-6">
+      
+      <!-- DESKTOP BANNER CONTAINER (sm: and above) -->
+      <div class="hidden sm:flex relative rounded-[2.5rem] overflow-hidden bg-linear-to-br from-smak-neutral-950 via-smak-neutral-900 to-smak-neutral-950 text-white min-h-120 lg:min-h-130 items-center shadow-2xl border border-smak-neutral-800/60">
+        <!-- Desktop Background Image -->
         <div class="absolute inset-0 grid grid-cols-1 lg:grid-cols-12 pointer-events-none">
           <div class="hidden lg:block lg:col-span-5 bg-linear-to-r from-smak-neutral-950 via-smak-neutral-950/95 to-transparent z-10"></div>
           <div class="lg:col-span-12 relative overflow-hidden h-full">
-            <picture class="w-full h-full">
-              <!-- Dedicated vertical culinary photo for mobile -->
-              <source media="(max-width: 639px)" srcset="/images/mobile_hero_dish.jpg" />
-              <!-- Desktop culinary hero photo -->
-              <img 
-                src="/images/pexels-dhiraj-jain-207743066-12737657.jpg" 
-                alt="SMAK Visual" 
-                class="w-full h-full object-cover object-center sm:object-[75%_center] lg:object-right opacity-100 transition-opacity duration-500" 
-              />
-            </picture>
-            <!-- Mobile darkening overlay -->
-            <div class="absolute inset-0 bg-linear-to-t from-black/60 via-black/45 to-black/40 lg:hidden"></div>
-            <!-- Desktop side gradient only -->
+            <img 
+              src="/images/pexels-dhiraj-jain-207743066-12737657.jpg" 
+              alt="SMAK Visual" 
+              class="w-full h-full object-cover object-center sm:object-[75%_center] lg:object-right opacity-100 transition-opacity duration-500" 
+            />
             <div class="absolute inset-0 bg-linear-to-r from-smak-neutral-950 via-smak-neutral-950/85 to-transparent hidden lg:block w-3/5"></div>
           </div>
         </div>
 
-        <!-- Content Layer -->
-        <div class="relative z-20 max-w-7xl w-full p-6 sm:p-10 lg:p-14">
-          <div class="max-w-xl space-y-4 sm:space-y-6 text-left">
-            
-            <h1 class="text-3xl sm:text-4xl lg:text-5xl xl:text-6xl font-black font-heading leading-[1.15] text-white tracking-tight drop-shadow-[0_2px_14px_rgba(0,0,0,0.95)]">
-              Відкрийте світ <br class="hidden sm:inline" />
-              <span class="text-coral-500 drop-shadow-[0_2px_10px_rgba(0,0,0,0.9)]">смаку</span> разом з нами!
+        <!-- Desktop Content Layer -->
+        <div class="relative z-20 max-w-7xl w-full p-6 sm:p-10 lg:p-14 flex flex-col items-start justify-center min-h-120 lg:min-h-130 text-white">
+          <div class="max-w-xl space-y-4 sm:space-y-6">
+            <h1 class="text-3xl sm:text-4xl lg:text-5xl xl:text-6xl font-black font-heading leading-[1.15] text-white tracking-tight drop-shadow-[0_2px_16px_rgba(0,0,0,0.95)]">
+              Відкрийте світ <br />
+              <span class="text-coral-500 font-black drop-shadow-[0_2px_12px_rgba(0,0,0,0.9)]">смаку</span> разом з нами!
             </h1>
 
-            <p class="text-sm sm:text-base text-white/95 sm:text-smak-neutral-200/90 font-medium leading-relaxed drop-shadow-[0_1px_10px_rgba(0,0,0,0.95)]">
+            <p class="text-sm sm:text-base text-smak-neutral-200/90 font-medium leading-relaxed drop-shadow-[0_1px_10px_rgba(0,0,0,0.95)]">
               Розкрийте свій кулінарний потенціал легко та просто разом з розумним ШІ-помічником SMAK — шукайте автентичні рецепти, адаптуйте інгредієнти та створюйте кулінарні шедеври щодня.
             </p>
 
-            <!-- Action Buttons: Moved slightly lower on mobile, inline pills on tablet/desktop -->
-            <div class="pt-5 sm:pt-2 flex flex-col sm:flex-row items-stretch sm:items-center gap-3 sm:gap-4 w-full sm:w-auto">
-              <!-- Primary Dark Button -->
+            <!-- Desktop Action Buttons -->
+            <div class="flex items-center gap-4 pt-2">
               <NuxtLink 
                 to="/recipes" 
-                class="w-full sm:w-auto justify-center inline-flex items-center gap-3 px-6 py-3.5 rounded-full bg-smak-neutral-900/95 hover:bg-black text-white font-extrabold text-sm sm:text-base border border-smak-neutral-700/80 backdrop-blur-md shadow-2xl transition-all duration-300 hover:scale-[1.03] active:scale-95 cursor-pointer"
+                class="inline-flex items-center gap-3 px-6 py-3.5 rounded-full bg-smak-neutral-950/90 hover:bg-black text-white font-extrabold text-sm sm:text-base border border-white/20 backdrop-blur-md shadow-2xl transition-all duration-300 hover:scale-[1.03] active:scale-95 cursor-pointer"
               >
                 <span>Дослідити рецепти</span>
                 <div class="w-7 h-7 rounded-full bg-white text-smak-neutral-950 flex items-center justify-center shrink-0">
-                  <UIcon name="i-lucide-utensils" class="w-3.5 h-3.5" />
+                  <UIcon name="i-lucide-chef-hat" class="w-3.5 h-3.5" />
                 </div>
               </NuxtLink>
 
-              <!-- Secondary White Button -->
               <NuxtLink 
                 to="/chats" 
-                class="w-full sm:w-auto justify-center inline-flex items-center gap-2.5 px-6 py-3.5 rounded-full bg-white/95 hover:bg-white text-smak-neutral-900 font-extrabold text-sm sm:text-base shadow-xl backdrop-blur-md transition-all duration-300 hover:scale-[1.03] active:scale-95 cursor-pointer"
+                class="inline-flex items-center gap-2.5 px-6 py-3.5 rounded-full bg-white/95 hover:bg-white text-smak-neutral-900 font-extrabold text-sm sm:text-base shadow-xl backdrop-blur-md transition-all duration-300 hover:scale-[1.03] active:scale-95 cursor-pointer"
               >
                 <span>ШІ-Помічник</span>
                 <UIcon name="i-lucide-sparkles" class="w-4 h-4 text-coral-500" />
               </NuxtLink>
             </div>
-
           </div>
+        </div>
+      </div>
+
+      <!-- MOBILE FULL-SCREEN HERO WITH DARK TOP & BOTTOM DISH (sm:hidden) -->
+      <div class="sm:hidden relative w-full overflow-hidden bg-black text-white min-h-[calc(100svh-4rem)] flex flex-col justify-between pb-6 px-5">
+        <!-- 9:16 Background Image with Dark Top Space & Bottom Food Bowl -->
+        <img 
+          src="/images/mobile_hero_dark_dish.jpg" 
+          alt="SMAK Visual" 
+          class="absolute inset-0 w-full h-full object-cover object-bottom pointer-events-none" 
+        />
+        <!-- Subtle dark gradient overlay -->
+        <div class="absolute inset-0 bg-linear-to-b from-black/65 via-black/25 to-black/50 pointer-events-none"></div>
+
+        <!-- Text Content: Aligned to the top -->
+        <div class="relative z-10 w-full flex flex-col items-center justify-start text-center space-y-3.5 pt-30 px-2">
+          <h1 class="text-4xl font-black font-heading leading-tight text-white tracking-tight drop-shadow-[0_2px_14px_rgba(0,0,0,0.95)]">
+            Відкрийте світ <br />
+            <span class="text-coral-500 font-black drop-shadow-[0_2px_10px_rgba(0,0,0,0.9)]">смаку</span> разом з нами!
+          </h1>
+
+          <p class="text-sm text-white/95 font-normal leading-relaxed drop-shadow-[0_1px_8px_rgba(0,0,0,0.95)] max-w-sm mx-auto">
+            Розкрийте свій кулінарний потенціал легко та просто разом з розумним ШІ-помічником SMAK — шукайте автентичні рецепти, адаптуйте інгредієнти та створюйте кулінарні шедеври щодня.
+          </p>
+        </div>
+
+        <!-- Bottom Button at the very bottom of the hero block -->
+        <div class="relative z-10 w-full flex justify-center pb-2">
+          <NuxtLink 
+            to="/recipes" 
+            class="inline-flex items-center justify-center gap-3 px-8 py-3.5 rounded-full bg-white hover:bg-smak-neutral-100 text-smak-neutral-950 font-extrabold text-sm shadow-2xl transition-all duration-300 active:scale-95 cursor-pointer"
+          >
+            <span>Шукати рецепти</span>
+            <div class="w-6 h-6 rounded-full bg-coral-500 text-white flex items-center justify-center shrink-0">
+              <UIcon name="i-lucide-chef-hat" class="w-3.5 h-3.5" />
+            </div>
+          </NuxtLink>
         </div>
 
       </div>
+
     </section>
 
-    <!-- ===== 2. QUICK HIGHLIGHTS (2x2 GRID ON MOBILE, 4-CARDS GRID ON DESKTOP) ===== -->
-    <section class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-4 sm:py-6">
-      <div class="grid grid-cols-2 lg:grid-cols-4 gap-3 sm:gap-4 lg:gap-6">
+    <!-- ===== 2. QUICK HIGHLIGHTS (HORIZONTAL CAROUSEL ON MOBILE, 4-CARDS GRID ON DESKTOP) ===== -->
+    <section class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 pt-6 sm:pt-8 pb-3 sm:pb-8">
+      <div class="flex sm:grid sm:grid-cols-2 lg:grid-cols-4 gap-3.5 sm:gap-4 lg:gap-6 overflow-x-auto sm:overflow-visible snap-x snap-mandatory scrollbar-none -mx-4 px-4 sm:mx-0 sm:px-0 py-1">
         
         <!-- Card 1: Cooking Community -->
-        <div class="bg-smak-neutral-100/80 dark:bg-smak-neutral-900/60 p-4 sm:p-5 lg:p-6 rounded-2xl border border-smak-neutral-200/60 dark:border-smak-neutral-800/60 flex flex-col justify-between space-y-2.5 sm:space-y-3 hover:border-coral-500/40 transition-all group">
-          <div class="space-y-2 sm:space-y-2.5">
-            <div class="w-8 h-8 rounded-full bg-white dark:bg-smak-neutral-800 text-smak-neutral-700 dark:text-smak-neutral-200 flex items-center justify-center shadow-xs">
-              <UIcon name="i-lucide-users" class="w-4 h-4 text-coral-500" />
+        <div class="w-[74vw] sm:w-auto shrink-0 snap-center bg-smak-neutral-50/90 dark:bg-smak-neutral-900/60 p-5 sm:p-5 lg:p-6 rounded-2xl sm:rounded-3xl border border-smak-neutral-200/80 dark:border-smak-neutral-800/80 flex flex-col justify-between space-y-3 hover:border-coral-500/40 transition-all group shadow-2xs">
+          <div class="space-y-2.5">
+            <div class="w-9 h-9 rounded-full bg-white dark:bg-smak-neutral-800 text-smak-neutral-700 dark:text-smak-neutral-200 flex items-center justify-center shadow-xs">
+              <UIcon name="i-lucide-users" class="w-4.5 h-4.5 text-coral-500" />
             </div>
             <h3 class="font-heading font-extrabold text-sm sm:text-base text-smak-neutral-900 dark:text-white leading-snug">
               Кулінарна спільнота
             </h3>
-            <p class="text-xs sm:text-sm text-smak-neutral-500 dark:text-smak-neutral-400 font-medium leading-relaxed line-clamp-3 sm:line-clamp-none">
+            <p class="text-xs sm:text-sm text-smak-neutral-500 dark:text-smak-neutral-400 font-medium leading-relaxed">
               Діліться досвідом з іншими кулінарами, обговорюйте рецепти, ставте оцінки та знаходьте натхнення.
             </p>
           </div>
         </div>
 
         <!-- Card 2: AI Assistant -->
-        <div class="bg-smak-neutral-100/80 dark:bg-smak-neutral-900/60 p-4 sm:p-5 lg:p-6 rounded-2xl border border-smak-neutral-200/60 dark:border-smak-neutral-800/60 flex flex-col justify-between space-y-2.5 sm:space-y-3 hover:border-coral-500/40 transition-all group">
-          <div class="space-y-2 sm:space-y-2.5">
-            <div class="w-8 h-8 rounded-full bg-white dark:bg-smak-neutral-800 text-smak-neutral-700 dark:text-smak-neutral-200 flex items-center justify-center shadow-xs">
-              <UIcon name="i-lucide-sparkles" class="w-4 h-4 text-coral-500" />
+        <div class="w-[74vw] sm:w-auto shrink-0 snap-center bg-smak-neutral-50/90 dark:bg-smak-neutral-900/60 p-5 sm:p-5 lg:p-6 rounded-2xl sm:rounded-3xl border border-smak-neutral-200/80 dark:border-smak-neutral-800/80 flex flex-col justify-between space-y-3 hover:border-coral-500/40 transition-all group shadow-2xs">
+          <div class="space-y-2.5">
+            <div class="w-9 h-9 rounded-full bg-white dark:bg-smak-neutral-800 text-smak-neutral-700 dark:text-smak-neutral-200 flex items-center justify-center shadow-xs">
+              <UIcon name="i-lucide-sparkles" class="w-4.5 h-4.5 text-coral-500" />
             </div>
             <h3 class="font-heading font-extrabold text-sm sm:text-base text-smak-neutral-900 dark:text-white leading-snug">
               Розумний ШІ-кулінар
             </h3>
-            <p class="text-xs sm:text-sm text-smak-neutral-500 dark:text-smak-neutral-400 font-medium leading-relaxed line-clamp-3 sm:line-clamp-none">
+            <p class="text-xs sm:text-sm text-smak-neutral-500 dark:text-smak-neutral-400 font-medium leading-relaxed">
               Підбирає рецепти за наявними інгредієнтами, перераховує порції та миттєво підказує заміни.
             </p>
           </div>
         </div>
 
         <!-- Card 3: Personal Menu & Diets -->
-        <div class="bg-smak-neutral-100/80 dark:bg-smak-neutral-900/60 p-4 sm:p-5 lg:p-6 rounded-2xl border border-smak-neutral-200/60 dark:border-smak-neutral-800/60 flex flex-col justify-between space-y-2.5 sm:space-y-3 hover:border-coral-500/40 transition-all group">
-          <div class="space-y-2 sm:space-y-2.5">
-            <div class="w-8 h-8 rounded-full bg-white dark:bg-smak-neutral-800 text-smak-neutral-700 dark:text-smak-neutral-200 flex items-center justify-center shadow-xs">
-              <UIcon name="i-lucide-heart" class="w-4 h-4 text-coral-500" />
+        <div class="w-[74vw] sm:w-auto shrink-0 snap-center bg-smak-neutral-50/90 dark:bg-smak-neutral-900/60 p-5 sm:p-5 lg:p-6 rounded-2xl sm:rounded-3xl border border-smak-neutral-200/80 dark:border-smak-neutral-800/80 flex flex-col justify-between space-y-3 hover:border-coral-500/40 transition-all group shadow-2xs">
+          <div class="space-y-2.5">
+            <div class="w-9 h-9 rounded-full bg-white dark:bg-smak-neutral-800 text-smak-neutral-700 dark:text-smak-neutral-200 flex items-center justify-center shadow-xs">
+              <UIcon name="i-lucide-heart" class="w-4.5 h-4.5 text-coral-500" />
             </div>
             <h3 class="font-heading font-extrabold text-sm sm:text-base text-smak-neutral-900 dark:text-white leading-snug">
               Персональне меню
             </h3>
-            <p class="text-xs sm:text-sm text-smak-neutral-500 dark:text-smak-neutral-400 font-medium leading-relaxed line-clamp-3 sm:line-clamp-none">
+            <p class="text-xs sm:text-sm text-smak-neutral-500 dark:text-smak-neutral-400 font-medium leading-relaxed">
               Легко налаштовуйте страви під свій стиль харчування, дієтичні вподобання та уникайте алергенів.
             </p>
           </div>
         </div>
 
         <!-- Card 4: Collections & Authors -->
-        <div class="bg-smak-neutral-100/80 dark:bg-smak-neutral-900/60 p-4 sm:p-5 lg:p-6 rounded-2xl border border-smak-neutral-200/60 dark:border-smak-neutral-800/60 flex flex-col justify-between space-y-2.5 sm:space-y-3 hover:border-coral-500/40 transition-all group">
-          <div class="space-y-2 sm:space-y-2.5">
-            <div class="w-8 h-8 rounded-full bg-white dark:bg-smak-neutral-800 text-smak-neutral-700 dark:text-smak-neutral-200 flex items-center justify-center shadow-xs">
-              <UIcon name="i-lucide-bookmark" class="w-4 h-4 text-coral-500" />
+        <div class="w-[74vw] sm:w-auto shrink-0 snap-center bg-smak-neutral-50/90 dark:bg-smak-neutral-900/60 p-5 sm:p-5 lg:p-6 rounded-2xl sm:rounded-3xl border border-smak-neutral-200/80 dark:border-smak-neutral-800/80 flex flex-col justify-between space-y-3 hover:border-coral-500/40 transition-all group shadow-2xs">
+          <div class="space-y-2.5">
+            <div class="w-9 h-9 rounded-full bg-white dark:bg-smak-neutral-800 text-smak-neutral-700 dark:text-smak-neutral-200 flex items-center justify-center shadow-xs">
+              <UIcon name="i-lucide-bookmark" class="w-4.5 h-4.5 text-coral-500" />
             </div>
             <h3 class="font-heading font-extrabold text-sm sm:text-base text-smak-neutral-900 dark:text-white leading-snug">
               Власні колекції
             </h3>
-            <p class="text-xs sm:text-sm text-smak-neutral-500 dark:text-smak-neutral-400 font-medium leading-relaxed line-clamp-3 sm:line-clamp-none">
+            <p class="text-xs sm:text-sm text-smak-neutral-500 dark:text-smak-neutral-400 font-medium leading-relaxed">
               Зберігайте улюблені рецепти у власні кулінарні добірки та публікуйте авторські страви.
             </p>
           </div>
@@ -185,7 +212,7 @@ const faqs = [
     </section>
 
     <!-- ===== 3. RECIPE SHOWCASE TITLE & GRID ===== -->
-    <section class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8 sm:py-16">
+    <section class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 pt-4 pb-8 sm:pt-16 sm:pb-16">
       <!-- Centered Heading in Ukrainian -->
       <div class="text-center max-w-3xl mx-auto space-y-2.5 sm:space-y-3 mb-8 sm:mb-10">
         <h2 class="text-3xl sm:text-4xl lg:text-5xl font-black font-heading text-smak-neutral-900 dark:text-white leading-tight">
