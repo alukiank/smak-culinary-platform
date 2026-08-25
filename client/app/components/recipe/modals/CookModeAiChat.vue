@@ -369,7 +369,7 @@ onMounted(async () => {
     </div>
 
     <!-- ── Input area ──────────────────────────────────────────────────── -->
-    <div class="px-4 sm:px-3.5 pb-[max(0.75rem,env(safe-area-inset-bottom,0px))] sm:pb-3.5 pt-2.5 shrink-0 border-t border-smak-neutral-100/60 dark:border-smak-neutral-850 bg-white dark:bg-smak-neutral-950 flex flex-col transition-all duration-300">
+    <div class="px-3.5 sm:px-3.5 pb-2 sm:pb-3 pt-2 shrink-0 border-t border-smak-neutral-100/60 dark:border-smak-neutral-850 bg-white dark:bg-smak-neutral-950 flex flex-col transition-all duration-300">
       <!-- AI Limit Reached Warning Banner -->
       <div
         v-if="isAiLimitReached"
