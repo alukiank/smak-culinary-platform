@@ -104,7 +104,7 @@ const dropdownItems = computed(() => {
 </script>
 
 <template>
-  <div class="h-screen flex flex-col bg-smak-neutral-50 dark:bg-smak-neutral-950 text-smak-neutral-800 dark:text-smak-neutral-100 transition-colors duration-500 overflow-hidden">
+  <div class="h-[100dvh] min-h-[100dvh] flex flex-col bg-smak-neutral-50 dark:bg-smak-neutral-950 text-smak-neutral-800 dark:text-smak-neutral-100 transition-colors duration-500 overflow-hidden">
     
     <!-- Minimalist Modern Header Section (Clean flex layout, no overlapping elements) -->
     <header class="sticky top-0 z-40 shrink-0 backdrop-blur-md border-b shadow-xs transition-all duration-500 bg-white/90 dark:bg-smak-neutral-900/90 border-smak-neutral-200/60 dark:border-smak-neutral-800/60">

@@ -399,7 +399,7 @@ const preventMobileAutoFocus = (e: Event) => {
         </div>
 
         <!-- ───── Input Area ───── -->
-        <div class="shrink-0 w-full bg-smak-neutral-50/80 dark:bg-smak-neutral-950/80 backdrop-blur-xl border-t border-smak-neutral-100 dark:border-smak-neutral-900/50 pt-2.5 pb-2 px-0 z-20">
+        <div class="shrink-0 w-full bg-smak-neutral-50/80 dark:bg-smak-neutral-950/80 backdrop-blur-xl border-t border-smak-neutral-100 dark:border-smak-neutral-900/50 pt-2.5 pb-[max(0.75rem,env(safe-area-inset-bottom,0px))] sm:pb-3 px-0 z-20">
           <div class="w-full">
             <!-- AI Limit Reached Warning Banner -->
             <div

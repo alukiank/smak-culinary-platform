@@ -39,6 +39,16 @@ onUnmounted(() => {
 <template>
   <div ref="fabContainerRef" class="fixed bottom-6 right-6 sm:bottom-8 sm:right-8 xl:right-[calc((100vw-80rem)/2+1.5rem)] z-[9999] select-none">
     
+    <!-- Backdrop Overlay (100% light in light mode, 100% dark in dark mode) -->
+    <Transition name="fade">
+      <div 
+        v-if="isOpen"
+        class="fixed inset-0 z-40 bg-white dark:bg-smak-neutral-950 cursor-pointer"
+        aria-hidden="true"
+        @click="isOpen = false"
+      />
+    </Transition>
+
     <!-- Floating Minimalist AI Chat Window -->
     <Transition name="pop-in">
       <div 
@@ -104,5 +114,15 @@ onUnmounted(() => {
 .pop-in-leave-from {
   opacity: 1;
   transform: translateY(0) scale(1);
+}
+
+/* Backdrop Fade Transition */
+.fade-enter-active,
+.fade-leave-active {
+  transition: opacity 0.3s ease;
+}
+.fade-enter-from,
+.fade-leave-to {
+  opacity: 0;
 }
 </style>
