@@ -39,19 +39,11 @@ onUnmounted(() => {
 <template>
   <div ref="fabContainerRef" class="fixed bottom-6 right-6 sm:bottom-8 sm:right-8 xl:right-[calc((100vw-80rem)/2+1.5rem)] z-[9999] select-none">
     
-    <!-- Full-screen backdrop overlay (mobile only) to hide recipe content behind modal -->
-    <Transition name="fade">
-      <div
-        v-if="isOpen"
-        class="fixed inset-0 z-40 bg-white dark:bg-smak-neutral-900 sm:hidden"
-      />
-    </Transition>
-
     <!-- Floating Minimalist AI Chat Window -->
     <Transition name="pop-in">
       <div 
         v-if="isOpen"
-        class="fixed inset-0 sm:top-auto sm:bottom-24 sm:left-auto sm:right-8 xl:right-[calc((100vw-80rem)/2+1.5rem)] z-50 w-full sm:w-[420px] sm:h-[540px] rounded-none sm:rounded-3xl overflow-hidden bg-white dark:bg-smak-neutral-900 border-t border-smak-neutral-200/80 dark:border-smak-neutral-800 sm:border shadow-2xl flex flex-col transition-all duration-300 pt-[env(safe-area-inset-top,0px)] sm:pt-0"
+        class="fixed top-16 inset-x-0 bottom-0 sm:top-auto sm:bottom-24 sm:left-auto sm:right-8 xl:right-[calc((100vw-80rem)/2+1.5rem)] z-50 w-full sm:w-[420px] h-[calc(100vh-4rem)] sm:h-[540px] rounded-none sm:rounded-3xl overflow-hidden bg-white dark:bg-smak-neutral-900 border-t border-smak-neutral-200/80 dark:border-smak-neutral-800 sm:border shadow-2xl flex flex-col transition-all duration-300"
       >
         <CookModeAiChat 
           :recipe="recipe" 
@@ -112,15 +104,5 @@ onUnmounted(() => {
 .pop-in-leave-from {
   opacity: 1;
   transform: translateY(0) scale(1);
-}
-
-/* Backdrop fade */
-.fade-enter-active,
-.fade-leave-active {
-  transition: opacity 0.25s ease;
-}
-.fade-enter-from,
-.fade-leave-to {
-  opacity: 0;
 }
 </style>
