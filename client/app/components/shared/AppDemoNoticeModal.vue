@@ -56,7 +56,7 @@ const handleDismiss = () => {
 
         <!-- Body description -->
         <p class="text-sm sm:text-base text-smak-neutral-700 dark:text-smak-neutral-300 leading-relaxed font-medium">
-          Вітаємо на кулінарній платформі <strong>SMAK</strong>! Цей веб-застосунок створено як <strong>некомерційний проєкт для портфоліо розробника </strong> (<a href="https://github.com/alukiank" target="_blank" rel="noopener noreferrer" class="text-coral-500 hover:underline font-bold">GitHub Profile</a>).
+          Вітаємо на кулінарній платформі <strong>SMAK</strong>! Цей веб-застосунок створено як <strong>демонстраційний проєкт для портфоліо розробника </strong> (<a href="https://github.com/alukiank" target="_blank" rel="noopener noreferrer" class="text-coral-500 hover:underline font-bold">GitHub Profile</a>).
         </p>
 
         <!-- Links to Terms & Privacy in bottom right -->
