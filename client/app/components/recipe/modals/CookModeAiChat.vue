@@ -54,14 +54,11 @@ const handleFocus = () => {
 }
 
 const handleBlur = () => {
-  // Small timeout to allow clicks on quick actions to be registered
-  setTimeout(() => {
-    isInputFocused.value = false
-  }, 200)
+  isInputFocused.value = false
 }
 
 const showQuickActions = computed(() => {
-  return localMessages.value.length === 0 || isInputFocused.value
+  return localMessages.value.length === 0 && !isStreaming.value && !isInputFocused.value
 })
 
 

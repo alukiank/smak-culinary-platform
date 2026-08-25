@@ -131,10 +131,10 @@ const faqs = [
         <div class="relative z-10 w-full flex justify-center pb-2">
           <NuxtLink 
             to="/recipes" 
-            class="inline-flex items-center justify-center gap-3 px-8 py-3.5 rounded-full bg-white hover:bg-smak-neutral-100 text-smak-neutral-950 font-extrabold text-sm shadow-2xl transition-all duration-300 active:scale-95 cursor-pointer"
+            class="inline-flex items-center justify-center gap-3 px-8 py-3.5 rounded-full bg-black/60 hover:bg-black/80 text-white font-extrabold text-sm backdrop-blur-xl border border-white/20 hover:border-white/35 shadow-2xl shadow-black/40 transition-all duration-300 active:scale-95 cursor-pointer"
           >
             <span>Шукати рецепти</span>
-            <div class="w-6 h-6 rounded-full bg-coral-500 text-white flex items-center justify-center shrink-0">
+            <div class="w-6 h-6 rounded-full bg-coral-500 text-white flex items-center justify-center shrink-0 shadow-xs">
               <UIcon name="i-lucide-chef-hat" class="w-3.5 h-3.5" />
             </div>
           </NuxtLink>

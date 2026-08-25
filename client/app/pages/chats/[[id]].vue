@@ -399,7 +399,7 @@ const preventMobileAutoFocus = (e: Event) => {
         </div>
 
         <!-- ───── Input Area ───── -->
-        <div class="shrink-0 w-full bg-smak-neutral-50/80 dark:bg-smak-neutral-950/80 backdrop-blur-xl border-t border-smak-neutral-100 dark:border-smak-neutral-900/50 pt-2.5 pb-[max(0.75rem,env(safe-area-inset-bottom,0px))] sm:pb-3 px-0 z-20">
+        <div class="shrink-0 w-full bg-smak-neutral-50/80 dark:bg-smak-neutral-950/80 backdrop-blur-xl border-t border-smak-neutral-100 dark:border-smak-neutral-900/50 pt-2 pb-1.5 sm:pb-2 px-0 z-20">
           <div class="w-full">
             <!-- AI Limit Reached Warning Banner -->
             <div
@@ -496,7 +496,7 @@ const preventMobileAutoFocus = (e: Event) => {
             </div>
 
             <!-- Disclaimer Noticeable -->
-            <p class="text-center text-xs font-semibold text-smak-neutral-400 dark:text-smak-neutral-500 mt-1.5">
+            <p class="text-center text-[11px] sm:text-xs font-semibold text-smak-neutral-400 dark:text-smak-neutral-500 mt-1">
               ШІ може помилятися. Перевіряйте важливу кулінарну інформацію.
             </p>
           </div>
