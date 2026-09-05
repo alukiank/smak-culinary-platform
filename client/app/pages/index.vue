@@ -7,8 +7,24 @@ import RecipeGridSkeleton from '~/components/recipe/card/RecipeGridSkeleton.vue'
 definePageMeta({ fullWidth: true })
 
 useSeoMeta({
-  title: 'SMAK | Відкрийте світ смаку разом з нами!',
-  description: 'SMAK — кулінарна платформа, де ви знайдете тисячі автентичних рецептів та отримаєте допомогу розумного ШІ-асистента.'
+  title: 'SMAK — Відкрийте світ смаку разом з нами!',
+  ogTitle: 'SMAK — Відкрийте світ смаку разом з нами!',
+  description: 'Розумний ШІ-помічник у світі кулінарії. Підбір рецептів, персональне меню та спільнота.',
+  ogDescription: 'Розумний ШІ-помічник у світі кулінарії. Підбір рецептів, персональне меню та спільнота.',
+  ogImage: 'https://smak-app.pp.ua/images/og-image.png',
+  ogImageSecureUrl: 'https://smak-app.pp.ua/images/og-image.png',
+  ogImageType: 'image/png',
+  ogImageWidth: 1200,
+  ogImageHeight: 900,
+  ogImageAlt: 'SMAK — Кулінарна платформа',
+  ogUrl: 'https://smak-app.pp.ua/',
+  ogType: 'website',
+  ogSiteName: 'SMAK',
+  ogLocale: 'uk_UA',
+  twitterCard: 'summary_large_image',
+  twitterTitle: 'SMAK — Відкрийте світ смаку разом з нами!',
+  twitterDescription: 'Розумний ШІ-помічник у світі кулінарії. Підбір рецептів, персональне меню та спільнота.',
+  twitterImage: 'https://smak-app.pp.ua/images/og-image.png'
 })
 
 const { user } = useUser()

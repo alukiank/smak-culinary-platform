@@ -20,7 +20,25 @@ export default defineNuxtConfig({
         { name: 'apple-mobile-web-app-title', content: 'SMAK' },
         { name: 'mobile-web-app-capable', content: 'yes' },
         { name: 'theme-color', content: '#F05B5B' },
-        { name: 'description', content: 'Кулінарна платформа з AI-шефом та персоналізованими рецептами' }
+        { name: 'description', content: 'Розумний ШІ-помічник у світі кулінарії. Підбір рецептів, персональне меню та спільнота.' },
+        // Open Graph / Facebook / LinkedIn / Telegram
+        { property: 'og:title', content: 'SMAK — Відкрийте світ смаку разом з нами!' },
+        { property: 'og:description', content: 'Розумний ШІ-помічник у світі кулінарії. Підбір рецептів, персональне меню та спільнота.' },
+        { property: 'og:image', content: 'https://smak-app.pp.ua/images/og-image.png' },
+        { property: 'og:image:secure_url', content: 'https://smak-app.pp.ua/images/og-image.png' },
+        { property: 'og:image:type', content: 'image/png' },
+        { property: 'og:image:width', content: '1200' },
+        { property: 'og:image:height', content: '900' },
+        { property: 'og:image:alt', content: 'SMAK — Кулінарна платформа' },
+        { property: 'og:url', content: 'https://smak-app.pp.ua/' },
+        { property: 'og:type', content: 'website' },
+        { property: 'og:site_name', content: 'SMAK' },
+        { property: 'og:locale', content: 'uk_UA' },
+        // Twitter / X
+        { name: 'twitter:card', content: 'summary_large_image' },
+        { name: 'twitter:title', content: 'SMAK — Відкрийте світ смаку разом з нами!' },
+        { name: 'twitter:description', content: 'Розумний ШІ-помічник у світі кулінарії. Підбір рецептів, персональне меню та спільнота.' },
+        { name: 'twitter:image', content: 'https://smak-app.pp.ua/images/og-image.png' }
       ],
       link: [
         { rel: 'icon', type: 'image/x-icon', href: '/favicon.ico' },

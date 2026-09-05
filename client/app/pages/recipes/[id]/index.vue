@@ -86,10 +86,15 @@ onMounted(async () => {
 
 // SEO metadata integration
 useSeoMeta({
-  title: computed(() => recipe.value ? `Smak | ${recipe.value.title}` : 'Smak | Завантаження рецепту...'),
+  title: computed(() => recipe.value ? `SMAK | ${recipe.value.title}` : 'SMAK | Завантаження рецепту...'),
   description: computed(() => recipe.value ? recipe.value.description : 'Перегляд детальної інформації про рецепт, інгредієнти, кроки приготування та відгуки користувачів.'),
-  ogTitle: computed(() => recipe.value ? recipe.value.title : 'Рецепт | SMAK'),
-  ogDescription: computed(() => recipe.value ? recipe.value.description : 'Перегляд рецепту на платформі SMAK.')
+  ogTitle: computed(() => recipe.value ? `${recipe.value.title} — SMAK` : 'Рецепт | SMAK'),
+  ogDescription: computed(() => recipe.value ? recipe.value.description : 'Перегляд рецепту на платформі SMAK.'),
+  ogImage: computed(() => recipe.value?.imageUrl || 'https://smak-app.pp.ua/images/og-image.png'),
+  twitterCard: 'summary_large_image',
+  twitterTitle: computed(() => recipe.value ? `${recipe.value.title} — SMAK` : 'Рецепт | SMAK'),
+  twitterDescription: computed(() => recipe.value ? recipe.value.description : 'Перегляд рецепту на платформі SMAK.'),
+  twitterImage: computed(() => recipe.value?.imageUrl || 'https://smak-app.pp.ua/images/og-image.png')
 })
 </script>
 
