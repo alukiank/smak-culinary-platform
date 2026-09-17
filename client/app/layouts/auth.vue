@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import { computed, ref, onMounted, onUnmounted } from 'vue'
+import { computed } from 'vue'
 import { useRoute } from 'vue-router'
 import { useColorMode } from '#imports'
 
@@ -15,37 +15,27 @@ const isDark = computed({
   }
 })
 
-// Variable food photography pool
-const foodImages = [
-  '/images/auth_slide_2.png',
-  '/images/food_ingredients_banner.png',
-  '/images/pexels-dhiraj-jain-207743066-12737657.jpg',
-  '/images/smak-auth-food-banner.jpg'
-]
-
-const currentImageIndex = ref(0)
-let timer: ReturnType<typeof setInterval> | null = null
-
-// Select initial image based on route
-onMounted(() => {
+// Static photo selected specifically for each auth page
+const bannerImage = computed(() => {
   if (route.path.includes('/register')) {
-    currentImageIndex.value = 1
-  } else if (route.path.includes('/forgot-password') || route.path.includes('/reset-password')) {
-    currentImageIndex.value = 2
-  } else if (route.path.includes('/verify')) {
-    currentImageIndex.value = 3
-  } else {
-    currentImageIndex.value = 0
+    return {
+      webp: '/images/food_ingredients_banner.webp',
+      src: '/images/food_ingredients_banner.png',
+      alt: 'Свіжі інгредієнти та кулінарна творчість'
+    }
   }
-
-  // Auto rotate photo every 7 seconds
-  timer = setInterval(() => {
-    currentImageIndex.value = (currentImageIndex.value + 1) % foodImages.length
-  }, 7000)
-})
-
-onUnmounted(() => {
-  if (timer) clearInterval(timer)
+  if (route.path.includes('/forgot-password') || route.path.includes('/reset-password') || route.path.includes('/verify')) {
+    return {
+      webp: '/images/smak-auth-food-banner.webp',
+      src: '/images/smak-auth-food-banner.jpg',
+      alt: 'Вишукана страва SMAK'
+    }
+  }
+  return {
+    webp: '/images/auth_slide_2.webp',
+    src: '/images/auth_slide_2.png',
+    alt: 'Кулінарні шедеври SMAK'
+  }
 })
 
 // Dynamic quote text in Ukrainian
@@ -86,38 +76,26 @@ const bannerQuote = computed(() => {
       <div class="grid grid-cols-1 lg:grid-cols-12 min-h-screen sm:min-h-145 lg:min-h-165">
         
         <!-- Left Side: Dark Culinary Photo Banner (Fills left column completely on desktop) -->
-        <div class="hidden lg:flex lg:col-span-5 relative flex-col justify-end p-8 sm:p-10 bg-smak-neutral-950 text-white select-none group">
+        <div class="hidden lg:flex lg:col-span-5 relative flex-col justify-end p-8 sm:p-10 bg-smak-neutral-950 text-white select-none group overflow-hidden">
           
-          <!-- Variable Food Image background with crossfade effect -->
+          <!-- Static Food Image background pinned to page -->
           <div class="absolute inset-0 z-0">
-            <TransitionGroup name="fade">
+            <picture>
+              <source :srcset="bannerImage.webp" type="image/webp" />
               <img 
-                v-for="(img, idx) in foodImages"
-                :key="img"
-                v-show="idx === currentImageIndex"
-                :src="img" 
-                alt="Smak Culinary Art" 
+                :src="bannerImage.src" 
+                :alt="bannerImage.alt" 
+                loading="eager"
+                decoding="async"
+                fetchpriority="high"
                 class="absolute inset-0 w-full h-full object-cover object-center scale-105 group-hover:scale-100 transition-transform duration-1000 ease-out"
               />
-            </TransitionGroup>
+            </picture>
             <!-- Dark overlay for legibility -->
             <div class="absolute inset-0 bg-linear-to-t from-smak-neutral-950 via-smak-neutral-950/65 to-smak-neutral-950/20"></div>
           </div>
 
-          <!-- Photo Pagination Dots at Top Left (No top text labels!) -->
-          <div class="absolute top-6 left-8 z-10 flex items-center gap-1.5">
-            <button
-              v-for="(_, i) in foodImages"
-              :key="i"
-              @click="currentImageIndex = i"
-              type="button"
-              class="h-1.5 rounded-full transition-all duration-300 cursor-pointer"
-              :class="i === currentImageIndex ? 'w-6 bg-coral-500' : 'w-1.5 bg-white/40 hover:bg-white/70'"
-              :aria-label="`Slide ${i + 1}`"
-            ></button>
-          </div>
-
-          <!-- Bottom Quote & Title Section (No top text above photo!) -->
+          <!-- Bottom Quote & Title Section (No top text or sliders above photo!) -->
           <div class="relative z-10 space-y-3 max-w-md">
             <h2 class="text-2xl xl:text-3xl font-extrabold font-heading tracking-tight leading-[1.2] text-white">
               {{ bannerQuote.title }}
@@ -164,15 +142,3 @@ const bannerQuote = computed(() => {
     </div>
   </div>
 </template>
-
-<style scoped>
-.fade-enter-active,
-.fade-leave-active {
-  transition: opacity 0.8s ease;
-}
-
-.fade-enter-from,
-.fade-leave-to {
-  opacity: 0;
-}
-</style>

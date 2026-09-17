@@ -36,6 +36,7 @@ const config = useRuntimeConfig()
 const toast = useToast()
 const { triggerUpgradeModal } = useBilling()
 const { isAiLimitReached } = useChat()
+const { isLoggedIn } = useAuth()
 
 const chatId = ref<string | null>(null)
 const localMessages = ref<ChatMessageDto[]>([])
@@ -186,6 +187,7 @@ const streamToChat = async (text: string): Promise<void> => {
 // ─── Initialise chat session ──────────────────────────────────────────────────
 
 const initChat = async () => {
+  if (!isLoggedIn.value) return
   try {
     isSending.value = true
 
@@ -226,6 +228,10 @@ const initChat = async () => {
 // ─── Send custom user message ─────────────────────────────────────────────────
 
 const sendMessage = async () => {
+  if (!isLoggedIn.value) {
+    navigateTo('/auth/login')
+    return
+  }
   const text = inputText.value.trim()
   if (!text || isStreaming.value || !chatId.value) return
   inputText.value = ''
@@ -275,6 +281,10 @@ const quickActions = computed(() => [
 ])
 
 const runQuickAction = async (build: () => string) => {
+  if (!isLoggedIn.value) {
+    navigateTo('/auth/login')
+    return
+  }
   if (isStreaming.value || !chatId.value) return
   await streamToChat(build())
 }
@@ -325,8 +335,37 @@ onMounted(async () => {
     <!-- ── Messages area ───────────────────────────────────────────────── -->
     <div class="flex-1 overflow-y-auto px-4 pt-9 pb-3 space-y-3.5 scrollbar-none flex flex-col chat-fade-mask">
 
+      <!-- Unauthenticated notice -->
+      <div v-if="!isLoggedIn" class="flex flex-col items-center justify-center h-full gap-3 text-center py-6 px-4">
+        <div class="w-12 h-12 rounded-2xl bg-coral-500/10 dark:bg-coral-500/20 flex items-center justify-center text-coral-500">
+          <UIcon name="i-lucide-lock" class="w-6 h-6" />
+        </div>
+        <div class="space-y-1">
+          <h4 class="font-heading font-extrabold text-sm sm:text-base text-smak-neutral-900 dark:text-white">
+            Потрібна авторизація
+          </h4>
+          <p class="text-xs text-smak-neutral-500 dark:text-smak-neutral-400 max-w-xs leading-relaxed">
+            Увійдіть або зареєструйтесь, щоб ставити запитання ШІ-кухарю під час приготування
+          </p>
+        </div>
+        <div class="flex items-center gap-2 pt-2">
+          <NuxtLink
+            to="/auth/login"
+            class="px-4 py-1.5 rounded-full font-bold text-xs bg-coral-500 hover:bg-coral-600 text-white shadow-xs"
+          >
+            Увійти
+          </NuxtLink>
+          <NuxtLink
+            to="/auth/register"
+            class="px-4 py-1.5 rounded-full font-bold text-xs border border-smak-neutral-200 dark:border-smak-neutral-700 text-smak-neutral-700 dark:text-smak-neutral-300"
+          >
+            Реєстрація
+          </NuxtLink>
+        </div>
+      </div>
+
       <!-- Initializing skeleton -->
-      <div v-if="!chatId" class="flex flex-col items-center justify-center h-full gap-3 text-center py-6">
+      <div v-else-if="!chatId" class="flex flex-col items-center justify-center h-full gap-3 text-center py-6">
         <div class="w-10 h-10 rounded-2xl bg-ai-indigo-500/10 flex items-center justify-center">
           <UIcon name="i-lucide-chef-hat" class="w-5 h-5 text-ai-indigo-500 animate-pulse" />
         </div>
@@ -435,7 +474,7 @@ onMounted(async () => {
           type="text"
           placeholder="Своє запитання до ШІ..."
           class="flex-1 bg-transparent text-[15px] sm:text-base font-semibold text-smak-neutral-800 dark:text-white placeholder:text-sm sm:placeholder:text-[15px] placeholder:text-smak-neutral-400 dark:placeholder:text-smak-neutral-600 focus:outline-none"
-          :disabled="isStreaming || !chatId || isAiLimitReached"
+          :disabled="!isLoggedIn || isStreaming || !chatId || isAiLimitReached"
           @keydown="handleKeydown"
           @focus="handleFocus"
           @blur="handleBlur"

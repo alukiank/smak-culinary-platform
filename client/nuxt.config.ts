@@ -93,6 +93,10 @@ export default defineNuxtConfig({
   },
 
   routeRules: {
+    '/images/**': { headers: { 'cache-control': 'public, max-age=31536000, immutable' } },
+    '/_nuxt/**': { headers: { 'cache-control': 'public, max-age=31536000, immutable' } },
+    '/favicon.ico': { headers: { 'cache-control': 'public, max-age=86400' } },
+    '/apple-touch-icon.png': { headers: { 'cache-control': 'public, max-age=86400' } },
     '/profile/**': { ssr: false },
     '/admin/**': { ssr: false },
     '/chats/**': { ssr: false },

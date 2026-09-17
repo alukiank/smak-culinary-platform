@@ -123,11 +123,17 @@ const faqs = [
       <!-- MOBILE FULL-SCREEN HERO WITH DARK TOP & BOTTOM DISH (sm:hidden) -->
       <div class="sm:hidden relative w-full overflow-hidden bg-black text-white min-h-[calc(100svh-18rem)] flex flex-col justify-between pb-6 px-5">
         <!-- 9:16 Background Image with Dark Top Space & Bottom Food Bowl -->
-        <img 
-          src="/images/mobile_hero_dark_dish.jpg" 
-          alt="SMAK Visual" 
-          class="absolute inset-0 w-full h-full object-cover object-bottom pointer-events-none" 
-        />
+        <picture>
+          <source srcset="/images/mobile_hero_dark_dish.webp" type="image/webp" />
+          <img 
+            src="/images/mobile_hero_dark_dish.jpg" 
+            alt="SMAK Visual" 
+            loading="eager"
+            decoding="async"
+            fetchpriority="high"
+            class="absolute inset-0 w-full h-full object-cover object-bottom pointer-events-none" 
+          />
+        </picture>
         <!-- Subtle dark gradient overlay -->
         <div class="absolute inset-0 bg-linear-to-b from-black/65 via-black/25 to-black/50 pointer-events-none"></div>
 
@@ -290,11 +296,16 @@ const faqs = [
     <section class="max-w-7xl mx-auto px-0 sm:px-6 lg:px-8 py-4 sm:py-10">
       <div class="relative rounded-none sm:rounded-4xl overflow-hidden shadow-2xl min-h-85 sm:min-h-95 md:min-h-105 flex flex-col items-center justify-between sm:justify-center p-6 sm:p-12 text-center">
         <!-- Background Image -->
-        <img 
-          src="/images/cooking_banner_bg.png" 
-          alt="Давайте готувати смачно!" 
-          class="absolute inset-0 w-full h-full object-cover object-center" 
-        />
+        <picture>
+          <source srcset="/images/cooking_banner_bg.webp" type="image/webp" />
+          <img 
+            src="/images/cooking_banner_bg.png" 
+            alt="Давайте готувати смачно!" 
+            loading="lazy"
+            decoding="async"
+            class="absolute inset-0 w-full h-full object-cover object-center" 
+          />
+        </picture>
         <!-- Dark Overlay Gradient for maximum contrast -->
         <div class="absolute inset-0 bg-linear-to-t from-black/85 via-black/55 to-black/60 sm:bg-linear-to-r sm:from-black/60 sm:via-black/40 sm:to-black/55 backdrop-brightness-95"></div>
 

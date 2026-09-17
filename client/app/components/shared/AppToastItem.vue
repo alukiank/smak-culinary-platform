@@ -204,16 +204,16 @@ function handleAction(action: any) {
       </button>
     </div>
 
-    <!-- Continuous Linear Progress Bar (No Pause on Hover/Blur) -->
+    <!-- Continuous Linear Progress Bar -->
     <div
       v-if="showProgress"
       class="absolute inset-x-0 bottom-0 h-1 bg-smak-neutral-100 dark:bg-smak-neutral-800/80 overflow-hidden"
     >
       <div
-        class="h-full w-full origin-left will-change-transform"
+        class="toast-progress-bar h-full w-full origin-left will-change-transform"
         :class="colorConfig.progressBar"
         :style="{
-          animation: `toast-progress-shrink ${duration}ms linear forwards`
+          animationDuration: `${duration}ms`
         }"
       />
     </div>
@@ -221,6 +221,23 @@ function handleAction(action: any) {
 </template>
 
 <style scoped>
+.toast-progress-bar {
+  animation-name: toast-progress-shrink;
+  animation-timing-function: linear;
+  animation-fill-mode: forwards;
+}
+
+@keyframes toast-progress-shrink {
+  from {
+    transform: scaleX(1);
+  }
+  to {
+    transform: scaleX(0);
+  }
+}
+</style>
+
+<style>
 @keyframes toast-progress-shrink {
   from {
     transform: scaleX(1);

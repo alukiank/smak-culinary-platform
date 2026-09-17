@@ -15,9 +15,11 @@ features:
 import { ref, computed, watch, nextTick, onMounted, onBeforeUnmount } from 'vue'
 import { useChat } from '~/composables/useChat'
 import { useUser } from '~/composables/useUser'
+import { useAuth } from '~/composables/useAuth'
 import type { ChatMessageDto } from '~/types/chat'
 
 const { getRestrictions, user } = useUser()
+const { isLoggedIn } = useAuth()
 
 const loadRestrictions = async () => {
   if (user.value && (!user.value.allergies || !user.value.dietary)) {
@@ -30,7 +32,6 @@ const loadRestrictions = async () => {
 }
 
 definePageMeta({
-  middleware: ['auth'],
   layout: 'chat',
 })
 
@@ -119,6 +120,11 @@ const streamingMessage = computed((): ChatMessageDto | null => {
 
 // Init 
 onMounted(async () => {
+  if (!isLoggedIn.value) {
+    resetMessages()
+    return
+  }
+
   if (user.value) {
     loadRestrictions()
   }
@@ -157,12 +163,37 @@ onMounted(async () => {
   scrollToBottom('instant')
 })
 
+watch(isLoggedIn, async (loggedIn) => {
+  if (loggedIn) {
+    if (user.value) {
+      loadRestrictions()
+    }
+    if (chatId.value) {
+      await Promise.all([
+        fetchChatById(chatId.value),
+        fetchMessages(chatId.value),
+      ])
+    }
+    if (chats.value.length === 0) {
+      await fetchChats()
+    }
+    await nextTick()
+    scrollToBottom('instant')
+  } else {
+    resetMessages()
+  }
+})
+
 onBeforeUnmount(() => {
   resetMessages()
 })
 
 // Re-init when chatId changes (navigating between chats)
 watch(chatId, async (newId) => {
+  if (!isLoggedIn.value) {
+    resetMessages()
+    return
+  }
   if (isStreaming.value) return
   
   if (isNewChatJustCreated.value) {
@@ -215,8 +246,20 @@ const handleScroll = async () => {
   }
 }
 
+const handleUnauthAction = () => {
+  navigateTo({
+    path: '/auth/login',
+    query: { redirect: route.fullPath }
+  })
+}
+
 // Messaging
 const handleSend = async () => {
+  if (!isLoggedIn.value) {
+    handleUnauthAction()
+    return
+  }
+
   const text = messageInput.value.trim()
   if (!text || isStreaming.value) return
 
@@ -357,7 +400,7 @@ const preventMobileAutoFocus = (e: Event) => {
             <!-- Empty state -->
             <div
               v-else-if="!isLoadingMessages && messages.length === 0 && !isStreaming"
-              class="flex flex-col items-center justify-center text-center gap-3 max-w-2xl px-4 w-full -mt-16 sm:-mt-24 pb-8 mx-auto"
+              class="flex flex-col items-center justify-center text-center gap-3 max-w-2xl px-4 w-full my-auto pb-6 mx-auto"
             >
               <div class="flex items-center justify-center mb-1">
                 <UIcon 
@@ -404,37 +447,84 @@ const preventMobileAutoFocus = (e: Event) => {
             <!-- AI Limit Reached Warning Banner -->
             <div
               v-if="isAiLimitReached"
-              class="flex items-center justify-between gap-3 mb-2.5 px-4 py-2.5 rounded-2xl bg-amber-500/10 dark:bg-amber-500/15 border border-amber-500/30 dark:border-amber-500/30 text-amber-900 dark:text-amber-200 shadow-2xs animate-fade-in"
+              class="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-3 sm:gap-4 mb-3 px-4.5 sm:px-5 py-3 sm:py-3.5 rounded-2xl bg-amber-50/90 dark:bg-amber-950/40 border border-amber-200/80 dark:border-amber-800/60 shadow-xs animate-fade-in"
             >
-              <div class="flex items-center gap-2.5 min-w-0">
-                <div class="w-8 h-8 rounded-xl bg-amber-500/10 dark:bg-amber-500/20 flex items-center justify-center text-amber-500 shrink-0">
-                  <UIcon name="i-lucide-zap-off" class="w-4.5 h-4.5" />
+              <div class="flex items-center gap-3 min-w-0">
+                <div class="w-10 h-10 rounded-xl bg-amber-500/15 dark:bg-amber-500/25 flex items-center justify-center text-amber-500 shrink-0">
+                  <UIcon name="i-lucide-zap-off" class="w-5 h-5" />
                 </div>
-                <div class="flex flex-col min-w-0">
-                  <span class="font-heading font-bold text-xs sm:text-sm text-smak-neutral-900 dark:text-white truncate">
+                <div class="flex flex-col min-w-0 text-left">
+                  <span class="font-heading font-extrabold text-sm sm:text-[15px] md:text-base text-smak-neutral-900 dark:text-white leading-snug">
                     Ліміт ШІ-запитів вичерпано
                   </span>
-                  <span class="text-[11px] sm:text-xs text-smak-neutral-500 dark:text-smak-neutral-400 truncate">
-                    Оновіть тариф для безлімітного спілкування
+                  <span class="text-xs sm:text-[13px] font-medium text-smak-neutral-600 dark:text-smak-neutral-400 mt-0.5 leading-normal">
+                    Оновіть тариф для безлімітного спілкування з асистентом
                   </span>
                 </div>
               </div>
-              <NuxtLink
-                to="/billing/plans"
-                class="shrink-0 px-3.5 py-1.5 rounded-xl bg-brand-gradient text-white font-bold text-xs shadow-xs hover:scale-105 transition-all cursor-pointer flex items-center gap-1"
-              >
-                <span>Тарифи</span>
-                <UIcon name="i-lucide-arrow-right" class="w-3.5 h-3.5" />
-              </NuxtLink>
+              <div class="flex items-center gap-2.5 shrink-0 w-full sm:w-auto justify-end">
+                <NuxtLink
+                  to="/billing/plans"
+                  class="flex-1 sm:flex-initial text-center px-4.5 py-2 rounded-full bg-brand-gradient text-white font-bold text-xs sm:text-sm shadow-xs hover:scale-[1.03] active:scale-95 transition-all cursor-pointer flex items-center justify-center gap-1.5"
+                >
+                  <span>Тарифи</span>
+                  <UIcon name="i-lucide-arrow-right" class="w-4 h-4" />
+                </NuxtLink>
+              </div>
+            </div>
+
+            <!-- Unauthenticated User Notice Banner -->
+            <div
+              v-else-if="!isLoggedIn"
+              class="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-3 sm:gap-4 mb-3 px-4.5 sm:px-5 py-3 sm:py-3.5 rounded-2xl bg-coral-50/90 dark:bg-coral-950/40 border border-coral-200/80 dark:border-coral-800/60 text-smak-neutral-800 dark:text-smak-neutral-200 shadow-xs animate-fade-in"
+            >
+              <div class="flex items-center gap-3 min-w-0">
+                <div class="w-10 h-10 rounded-xl bg-coral-500/15 dark:bg-coral-500/25 flex items-center justify-center text-coral-500 shrink-0">
+                  <UIcon name="i-lucide-lock" class="w-5 h-5" />
+                </div>
+                <div class="flex flex-col min-w-0 text-left">
+                  <span class="font-heading font-extrabold text-sm sm:text-[15px] md:text-base text-smak-neutral-900 dark:text-white leading-snug">
+                    Потрібна авторизація для спілкування
+                  </span>
+                  <span class="text-xs sm:text-[13px] font-medium text-smak-neutral-600 dark:text-smak-neutral-400 mt-0.5 leading-normal">
+                    Увійдіть в акаунт або зареєструйтесь, щоб ставити запитання та зберігати історію чатів
+                  </span>
+                </div>
+              </div>
+              <div class="flex items-center gap-2.5 shrink-0 w-full sm:w-auto justify-end">
+                <NuxtLink
+                  :to="`/auth/login?redirect=${encodeURIComponent(route.fullPath)}`"
+                  class="flex-1 sm:flex-initial text-center px-4 py-2 rounded-full font-bold text-xs sm:text-sm text-smak-neutral-800 dark:text-smak-neutral-200 hover:text-coral-500 dark:hover:text-coral-400 border border-smak-neutral-200 dark:border-smak-neutral-700 hover:border-coral-400 dark:hover:border-coral-500 transition-all cursor-pointer bg-white dark:bg-smak-neutral-800 shadow-2xs"
+                >
+                  Увійти
+                </NuxtLink>
+                <NuxtLink
+                  :to="`/auth/register?redirect=${encodeURIComponent(route.fullPath)}`"
+                  class="flex-1 sm:flex-initial text-center px-4.5 py-2 rounded-full font-bold text-xs sm:text-sm bg-coral-500 hover:bg-coral-600 text-white shadow-xs shadow-coral-500/20 transition-all duration-200 hover:scale-[1.03] active:scale-95 cursor-pointer"
+                >
+                  Реєстрація
+                </NuxtLink>
+              </div>
             </div>
 
             <!-- Archived warning -->
             <div
               v-else-if="currentChat?.isArchived && chatId"
-              class="flex items-center gap-2 mb-2 px-4 py-1.5 rounded-full bg-yellow-50 dark:bg-yellow-950/20 border border-yellow-200 dark:border-yellow-900/40 text-xs text-yellow-700 dark:text-yellow-400"
+              class="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-3 sm:gap-4 mb-3 px-4.5 sm:px-5 py-3 sm:py-3.5 rounded-2xl bg-yellow-500/10 dark:bg-yellow-500/15 border border-yellow-500/30 dark:border-yellow-500/30 shadow-xs animate-fade-in"
             >
-              <UIcon name="i-lucide-archive" class="w-4 h-4 shrink-0" />
-              <span>Цей чат архівовано. Ви можете читати повідомлення, але не можете надсилати нові.</span>
+              <div class="flex items-center gap-3 min-w-0">
+                <div class="w-10 h-10 rounded-xl bg-yellow-500/15 dark:bg-yellow-500/25 flex items-center justify-center text-yellow-600 dark:text-yellow-400 shrink-0">
+                  <UIcon name="i-lucide-archive" class="w-5 h-5" />
+                </div>
+                <div class="flex flex-col min-w-0 text-left">
+                  <span class="font-heading font-extrabold text-sm sm:text-[15px] md:text-base text-smak-neutral-900 dark:text-white leading-snug">
+                    Цей чат архівовано
+                  </span>
+                  <span class="text-xs sm:text-[13px] font-medium text-smak-neutral-600 dark:text-smak-neutral-400 mt-0.5 leading-normal">
+                    Ви можете читати повідомлення, але не можете надсилати нові
+                  </span>
+                </div>
+              </div>
             </div>
 
             <!-- Input wrapper + History Button -->
@@ -514,102 +604,136 @@ const preventMobileAutoFocus = (e: Event) => {
     >
       <template #content>
         <div class="space-y-4 p-1">
-          <!-- Search Input -->
-          <div class="relative">
-            <UInput
-              v-model="chatSearchQuery"
-              icon="i-lucide-search"
-              placeholder="Пошук у чатах..."
-              size="lg"
-              class="w-full"
-              :ui="{
-                base: 'rounded-full bg-smak-neutral-100 dark:bg-smak-neutral-800/80 border-0 py-3 px-5 text-base sm:text-[17px] font-semibold placeholder:text-[15px] sm:placeholder:text-base placeholder:text-smak-neutral-400 focus-visible:ring-2 focus-visible:ring-coral-400'
-              }"
-            />
+          <!-- Unauthenticated state in History Modal -->
+          <div v-if="!isLoggedIn" class="py-8 text-center space-y-3 px-4">
+            <div class="w-12 h-12 rounded-full bg-coral-50 dark:bg-coral-950/40 text-coral-500 flex items-center justify-center mx-auto">
+              <UIcon name="i-lucide-lock" class="w-6 h-6" />
+            </div>
+            <div class="space-y-1">
+              <h4 class="font-heading font-bold text-base text-smak-neutral-900 dark:text-white">
+                Історія чатів доступна після входу
+              </h4>
+              <p class="text-xs sm:text-sm text-smak-neutral-500 dark:text-smak-neutral-400 max-w-xs mx-auto">
+                Увійдіть в обліковий запис, щоб зберігати та переглядати ваші розмови з кулінарним помічником
+              </p>
+            </div>
+            <div class="flex items-center justify-center gap-2 pt-2">
+              <NuxtLink
+                :to="`/auth/login?redirect=${encodeURIComponent(route.fullPath)}`"
+                class="px-4 py-2 rounded-full font-bold text-xs sm:text-sm bg-coral-500 text-white hover:bg-coral-600 transition-all shadow-xs cursor-pointer"
+                @click="isChatHistoryModalOpen = false"
+              >
+                Увійти в акаунт
+              </NuxtLink>
+              <NuxtLink
+                :to="`/auth/register?redirect=${encodeURIComponent(route.fullPath)}`"
+                class="px-4 py-2 rounded-full font-bold text-xs sm:text-sm border border-smak-neutral-200 dark:border-smak-neutral-700 hover:border-coral-500 text-smak-neutral-800 dark:text-smak-neutral-200 transition-all cursor-pointer"
+                @click="isChatHistoryModalOpen = false"
+              >
+                Реєстрація
+              </NuxtLink>
+            </div>
           </div>
 
-          <!-- Section Label: Останні -->
-          <div class="flex items-center justify-between pt-1">
-            <span class="text-sm font-black uppercase tracking-wider text-smak-neutral-400 dark:text-smak-neutral-500 font-heading">
-              Останні
-            </span>
-            <button
-              type="button"
-              class="rounded-full font-bold cursor-pointer bg-transparent hover:bg-transparent border border-transparent hover:border-coral-500 text-smak-neutral-800 dark:text-smak-neutral-200 hover:text-coral-500 transition-all px-4 py-1.5 text-[15px] sm:text-base flex items-center gap-2"
-              @click="() => { isChatHistoryModalOpen = false; router.push('/chats') }"
-            >
-              <UIcon name="i-lucide-plus" class="w-4.5 h-4.5 text-coral-500" />
-              <span>Новий чат</span>
-            </button>
-          </div>
-
-          <!-- Chat List -->
-          <div class="max-h-96 overflow-y-auto space-y-2.5 custom-scrollbar pr-1">
-            <div v-if="filteredChats.length === 0" class="py-8 text-center text-sm sm:text-base font-semibold text-smak-neutral-400">
-              Чати не знайдено
+          <!-- Authenticated history search & list -->
+          <template v-else>
+            <!-- Search Input -->
+            <div class="relative">
+              <UInput
+                v-model="chatSearchQuery"
+                icon="i-lucide-search"
+                placeholder="Пошук у чатах..."
+                size="lg"
+                class="w-full"
+                :ui="{
+                  base: 'rounded-full bg-smak-neutral-100 dark:bg-smak-neutral-800/80 border-0 py-3 px-5 text-base sm:text-[17px] font-semibold placeholder:text-[15px] sm:placeholder:text-base placeholder:text-smak-neutral-400 focus-visible:ring-2 focus-visible:ring-coral-400'
+                }"
+              />
             </div>
 
-            <div
-              v-for="c in filteredChats"
-              :key="c.id"
-              class="flex items-center justify-between p-3.5 sm:p-4 rounded-2xl cursor-pointer transition-all duration-200 group border border-smak-neutral-200/60 dark:border-smak-neutral-800/60 hover:border-coral-400 dark:hover:border-coral-500 hover:shadow-xs bg-white dark:bg-smak-neutral-900/40"
-              :class="[chatId === c.id ? 'bg-coral-50/50 dark:bg-coral-950/20 border-coral-300 dark:border-coral-800' : '']"
-              @click="() => { isChatHistoryModalOpen = false; router.push(`/chats/${c.id}`) }"
-            >
-              <!-- Editing mode inside modal -->
-              <template v-if="editingChatId === c.id">
-                <div class="flex items-center gap-2.5 flex-1 pr-2" @click.stop>
-                  <input
-                    v-model="modalEditingTitle"
-                    class="flex-1 text-[15px] sm:text-base font-bold bg-transparent text-smak-neutral-800 dark:text-smak-neutral-100 border-b-2 border-coral-400 focus:outline-none py-1"
-                    maxlength="255"
-                    @keydown.enter="saveChatInModal(c)"
-                    @keydown.esc="editingChatId = null"
-                    autofocus
-                  />
-                  <button type="button" class="p-1.5 text-emerald-500 hover:text-emerald-600 cursor-pointer" @click="saveChatInModal(c)">
-                    <UIcon name="i-lucide-check" class="w-5 h-5" />
-                  </button>
-                </div>
-              </template>
+            <!-- Section Label: Останні -->
+            <div class="flex items-center justify-between pt-1">
+              <span class="text-sm font-black uppercase tracking-wider text-smak-neutral-400 dark:text-smak-neutral-500 font-heading">
+                Останні
+              </span>
+              <button
+                type="button"
+                class="rounded-full font-bold cursor-pointer bg-transparent hover:bg-transparent border border-transparent hover:border-coral-500 text-smak-neutral-800 dark:text-smak-neutral-200 hover:text-coral-500 transition-all px-4 py-1.5 text-[15px] sm:text-base flex items-center gap-2"
+                @click="() => { isChatHistoryModalOpen = false; router.push('/chats') }"
+              >
+                <UIcon name="i-lucide-plus" class="w-4.5 h-4.5 text-coral-500" />
+                <span>Новий чат</span>
+              </button>
+            </div>
 
-              <!-- Normal display mode -->
-              <template v-else>
-                <div class="flex items-center gap-3 min-w-0 flex-1 pr-3">
-                  <span class="text-[15px] sm:text-base font-bold truncate text-smak-neutral-900 dark:text-smak-neutral-100 group-hover:text-coral-500 transition-colors">
-                    {{ c.title || 'Новий чат' }}
-                  </span>
-                </div>
+            <!-- Chat List -->
+            <div class="max-h-96 overflow-y-auto space-y-2.5 custom-scrollbar pr-1">
+              <div v-if="filteredChats.length === 0" class="py-8 text-center text-sm sm:text-base font-semibold text-smak-neutral-400">
+                Чати не знайдено
+              </div>
 
-                <!-- Right-aligned Date & Action Buttons -->
-                <div class="flex items-center justify-end gap-2.5 shrink-0 ml-auto text-right">
-                  <span class="text-xs sm:text-sm font-semibold text-smak-neutral-400 dark:text-smak-neutral-500 shrink-0 text-right">
-                    {{ formatChatDate(c.updatedAt || c.createdAt) }}
-                  </span>
-
-                  <!-- Action Buttons: Edit & Delete (Always visible) -->
-                  <div class="flex items-center gap-1 shrink-0">
-                    <button
-                      type="button"
-                      class="p-2 rounded-xl text-smak-neutral-400 hover:text-coral-500 hover:bg-coral-50 dark:hover:bg-coral-950/30 transition-all cursor-pointer"
-                      title="Редагувати назву"
-                      @click="startEditChatInModal(c, $event)"
-                    >
-                      <UIcon name="i-lucide-pencil" class="w-4 h-4 sm:w-4.5 sm:h-4.5" />
-                    </button>
-                    <button
-                      type="button"
-                      class="p-2 rounded-xl text-smak-neutral-400 hover:text-rose-500 hover:bg-rose-50 dark:hover:bg-rose-950/30 transition-all cursor-pointer"
-                      title="Видалити чат"
-                      @click="openDeleteChatModal(c, $event)"
-                    >
-                      <UIcon name="i-lucide-trash-2" class="w-4 h-4 sm:w-4.5 sm:h-4.5" />
+              <div
+                v-for="c in filteredChats"
+                :key="c.id"
+                class="flex items-center justify-between p-3.5 sm:p-4 rounded-2xl cursor-pointer transition-all duration-200 group border border-smak-neutral-200/60 dark:border-smak-neutral-800/60 hover:border-coral-400 dark:hover:border-coral-500 hover:shadow-xs bg-white dark:bg-smak-neutral-900/40"
+                :class="[chatId === c.id ? 'bg-coral-50/50 dark:bg-coral-950/20 border-coral-300 dark:border-coral-800' : '']"
+                @click="() => { isChatHistoryModalOpen = false; router.push(`/chats/${c.id}`) }"
+              >
+                <!-- Editing mode inside modal -->
+                <template v-if="editingChatId === c.id">
+                  <div class="flex items-center gap-2.5 flex-1 pr-2" @click.stop>
+                    <input
+                      v-model="modalEditingTitle"
+                      class="flex-1 text-[15px] sm:text-base font-bold bg-transparent text-smak-neutral-800 dark:text-smak-neutral-100 border-b-2 border-coral-400 focus:outline-none py-1"
+                      maxlength="255"
+                      @keydown.enter="saveChatInModal(c)"
+                      @keydown.esc="editingChatId = null"
+                      autofocus
+                    />
+                    <button type="button" class="p-1.5 text-emerald-500 hover:text-emerald-600 cursor-pointer" @click="saveChatInModal(c)">
+                      <UIcon name="i-lucide-check" class="w-5 h-5" />
                     </button>
                   </div>
-                </div>
-              </template>
+                </template>
+
+                <!-- Normal display mode -->
+                <template v-else>
+                  <div class="flex items-center gap-3 min-w-0 flex-1 pr-3">
+                    <span class="text-[15px] sm:text-base font-bold truncate text-smak-neutral-900 dark:text-smak-neutral-100 group-hover:text-coral-500 transition-colors">
+                      {{ c.title || 'Новий чат' }}
+                    </span>
+                  </div>
+
+                  <!-- Right-aligned Date & Action Buttons -->
+                  <div class="flex items-center justify-end gap-2.5 shrink-0 ml-auto text-right">
+                    <span class="text-xs sm:text-sm font-semibold text-smak-neutral-400 dark:text-smak-neutral-500 shrink-0 text-right">
+                      {{ formatChatDate(c.updatedAt || c.createdAt) }}
+                    </span>
+
+                    <!-- Action Buttons: Edit & Delete (Always visible) -->
+                    <div class="flex items-center gap-1 shrink-0">
+                      <button
+                        type="button"
+                        class="p-2 rounded-xl text-smak-neutral-400 hover:text-coral-500 hover:bg-coral-50 dark:hover:bg-coral-950/30 transition-all cursor-pointer"
+                        title="Редагувати назву"
+                        @click="startEditChatInModal(c, $event)"
+                      >
+                        <UIcon name="i-lucide-pencil" class="w-4 h-4 sm:w-4.5 sm:h-4.5" />
+                      </button>
+                      <button
+                        type="button"
+                        class="p-2 rounded-xl text-smak-neutral-400 hover:text-rose-500 hover:bg-rose-50 dark:hover:bg-rose-950/30 transition-all cursor-pointer"
+                        title="Видалити чат"
+                        @click="openDeleteChatModal(c, $event)"
+                      >
+                        <UIcon name="i-lucide-trash-2" class="w-4 h-4 sm:w-4.5 sm:h-4.5" />
+                      </button>
+                    </div>
+                  </div>
+                </template>
+              </div>
             </div>
-          </div>
+          </template>
         </div>
       </template>
     </UModal>

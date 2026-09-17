@@ -11,6 +11,7 @@
     "dev": "nuxt dev",
     "generate": "nuxt generate",
     "preview": "nuxt preview",
+    "optimize:images": "node scripts/optimize-images.mjs",
     "postinstall": "nuxt prepare"
   },
   "dependencies": {
@@ -25,6 +26,7 @@
   "devDependencies": {
     "@iconify-json/lucide": "^1.2.107",
     "@types/markdown-it": "^14.1.2",
-    "@types/node": "^25.6.2"
+    "@types/node": "^25.6.2",
+    "sharp": "^0.35.4"
   }
 }
