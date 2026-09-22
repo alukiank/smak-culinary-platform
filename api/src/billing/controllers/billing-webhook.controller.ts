@@ -59,15 +59,12 @@ export class BillingWebhookController {
       `[LiqPay Webhook] Data received: status="${callbackData.status}", order_id="${callbackData.order_id}", amount="${callbackData.amount} ${callbackData.currency}"`,
     );
 
+    const incomingStatus = this.paymentService.mapLiqPayStatus(
+      callbackData.status,
+    );
     const existingPayment = await this.paymentService.findByOrderId(
       callbackData.order_id,
     );
-    if (existingPayment) {
-      this.logger.log(
-        `[LiqPay Webhook] Duplicate webhook ignored for order_id: ${callbackData.order_id}`,
-      );
-      return { status: 'already_processed' };
-    }
 
     let userId = this.extractUserIdFromOrderId(callbackData.order_id);
     let planType = this.extractPlanTypeFromOrderId(callbackData.order_id);
@@ -83,7 +80,30 @@ export class BillingWebhookController {
       }
     }
 
-    await this.paymentService.createFromCallback(callbackData, userId);
+    const incomingTxId = String(
+      callbackData.payment_id ?? callbackData.transaction_id ?? '',
+    );
+
+    if (existingPayment) {
+      const isSameTransaction =
+        !incomingTxId || existingPayment.externalTransactionId === incomingTxId;
+      const isDuplicateFinalStatus =
+        isSameTransaction && existingPayment.status === incomingStatus;
+
+      if (isDuplicateFinalStatus && callbackData.action !== 'regular') {
+        this.logger.log(
+          `[LiqPay Webhook] Duplicate webhook ignored for order_id: ${callbackData.order_id}`,
+        );
+        return { status: 'already_processed' };
+      }
+
+      await this.paymentService.updateFromCallback(
+        existingPayment,
+        callbackData,
+      );
+    } else {
+      await this.paymentService.createFromCallback(callbackData, userId);
+    }
 
     if (
       callbackData.status === 'subscribed' ||

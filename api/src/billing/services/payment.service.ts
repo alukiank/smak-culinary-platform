@@ -76,7 +76,21 @@ export class PaymentService {
     return this.paymentRepository.save(payment);
   }
 
-  private mapLiqPayStatus(liqpayStatus: string): PaymentStatus {
+  async updateFromCallback(
+    payment: Payment,
+    callbackData: LiqPayCallbackData,
+  ): Promise<Payment> {
+    payment.status = this.mapLiqPayStatus(callbackData.status);
+    payment.externalTransactionData = callbackData as Record<string, any>;
+    if (callbackData.payment_id || callbackData.transaction_id) {
+      payment.externalTransactionId = String(
+        callbackData.payment_id ?? callbackData.transaction_id,
+      );
+    }
+    return this.paymentRepository.save(payment);
+  }
+
+  static mapLiqPayStatus(liqpayStatus: string): PaymentStatus {
     const map: Record<string, PaymentStatus> = {
       success: PaymentStatus.SUCCESS,
       subscribed: PaymentStatus.SUCCESS,
@@ -87,5 +101,9 @@ export class PaymentService {
       wait_accept: PaymentStatus.PENDING,
     };
     return map[liqpayStatus] ?? PaymentStatus.PENDING;
+  }
+
+  mapLiqPayStatus(liqpayStatus: string): PaymentStatus {
+    return PaymentService.mapLiqPayStatus(liqpayStatus);
   }
 }

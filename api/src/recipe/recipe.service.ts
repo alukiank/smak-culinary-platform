@@ -87,21 +87,22 @@ export class RecipeService {
       oldCoverImageId = recipe.coverImageId;
       oldGalleryImageIds = recipe.galleryImageIds || [];
 
-      const isContentChanged =
+      const isContentChanged = Boolean(
         (dto.title && dto.title !== recipe.title) ||
-        (dto.description !== undefined &&
-          dto.description !== recipe.description) ||
-        (dto.ingredients &&
-          JSON.stringify(dto.ingredients) !==
-          JSON.stringify(recipe.ingredients)) ||
-        (dto.directions &&
-          JSON.stringify(dto.directions) !==
-          JSON.stringify(recipe.directions)) ||
-        (dto.coverImageId !== undefined &&
-          dto.coverImageId !== recipe.coverImageId) ||
-        (dto.galleryImageIds &&
-          JSON.stringify(dto.galleryImageIds) !==
-          JSON.stringify(recipe.galleryImageIds));
+          (dto.description !== undefined &&
+            dto.description !== recipe.description) ||
+          (dto.ingredients &&
+            JSON.stringify(dto.ingredients) !==
+              JSON.stringify(recipe.ingredients)) ||
+          (dto.directions &&
+            JSON.stringify(dto.directions) !==
+              JSON.stringify(recipe.directions)) ||
+          (dto.coverImageId !== undefined &&
+            dto.coverImageId !== recipe.coverImageId) ||
+          (dto.galleryImageIds &&
+            JSON.stringify(dto.galleryImageIds) !==
+              JSON.stringify(recipe.galleryImageIds)),
+      );
 
       queryRunner.manager.merge(Recipe, recipe, dto);
 
