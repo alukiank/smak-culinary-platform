@@ -1,4 +1,4 @@
-name: Build and Push Docker Images
+name: CI/CD Pipeline
 
 on:
   push:
@@ -31,10 +31,6 @@ jobs:
             dockerfile: ./client/Dockerfile
             target: production
             image: ghcr.io/alukiank/smak-culinary-platform/client
-          - service: site-faq-init
-            context: ./client
-            dockerfile: ./client/Dockerfile.site-faq-init
-            image: ghcr.io/alukiank/smak-culinary-platform/site-faq-init
 
     steps:
       - name: Checkout repository
@@ -71,3 +67,43 @@ jobs:
           labels: ${{ steps.meta.outputs.labels }}
           cache-from: type=gha,scope=${{ matrix.service }}
           cache-to: type=gha,mode=max,scope=${{ matrix.service }}
+
+  deploy:
+    name: Deploy to Production
+    needs: build-and-push
+    if: github.event_name == 'push' && github.ref == 'refs/heads/main'
+    runs-on: ubuntu-latest
+    permissions:
+      contents: read
+      packages: read
+
+    steps:
+      - name: Deploy via SSH
+        uses: appleboy/ssh-action@v1.2.0
+        with:
+          host: ${{ secrets.PROD_HOST }}
+          username: ${{ secrets.PROD_USER }}
+          key: ${{ secrets.PROD_SSH_KEY }}
+          port: ${{ secrets.PROD_PORT || 22 }}
+          script_stop: true
+          script: |
+            echo "=== Deploying to production ==="
+            cd ${{ secrets.PROD_PROJECT_PATH }}
+
+            echo "Updating repository files..."
+            git fetch origin main
+            git reset --hard origin/main
+
+            echo "Logging in to GitHub Container Registry..."
+            echo "${{ secrets.GITHUB_TOKEN }}" | docker login ghcr.io -u ${{ github.actor }} --password-stdin
+
+            echo "Pulling latest Docker images..."
+            docker compose -f docker-compose.prod.yml pull
+
+            echo "Starting / updating containers..."
+            docker compose -f docker-compose.prod.yml up -d --remove-orphans
+
+            echo "Pruning unused Docker images..."
+            docker image prune -f
+
+            echo "=== Deployment completed successfully! ==="

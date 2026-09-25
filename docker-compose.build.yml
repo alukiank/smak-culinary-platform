@@ -48,8 +48,6 @@ services:
         condition: service_healthy
       redis:
         condition: service_healthy
-      site-faq-init:
-        condition: service_completed_successfully
     env_file:
       - ./api/.env.prod
     environment:
@@ -57,8 +55,7 @@ services:
       DB_PORT: 5432
       REDIS_HOST: redis
       REDIS_PORT: 6379
-    volumes:
-      - site_faq:/site-faq:ro
+      CLIENT_INTERNAL_URL: http://client:3000
     networks:
       - smak_culinary_platform_network_prod
     restart: always
@@ -81,19 +78,6 @@ services:
     networks:
       - smak_culinary_platform_network_prod
     restart: always
-
-  site-faq-init:
-    build:
-      context: ./client
-      dockerfile: Dockerfile
-      target: build
-    container_name: smak_culinary_platform_site_faq_init
-    command: sh -c "cp generated/public-site-faq.* /site-faq/"
-    volumes:
-      - site_faq:/site-faq
-    networks:
-      - smak_culinary_platform_network_prod
-    restart: "no"
 
   proxy:
     image: caddy:2.9-alpine
@@ -128,4 +112,3 @@ volumes:
   smak_culinary_platform_data_prod:
   caddy_data_prod:
   caddy_config_prod:
-  site_faq:

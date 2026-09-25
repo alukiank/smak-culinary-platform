@@ -147,57 +147,71 @@ export class ToolHandlerService {
           const format = args.format || 'markdown';
           const fileName = format === 'json' ? 'public-site-faq.json' : 'public-site-faq.md';
 
-          // Helper to parse and return the result
-          const buildResult = (fileContent: string) => {
+          const siteUrl = (
+            this.configService.get<string>('FRONTEND_URL') ||
+            process.env.FRONTEND_URL ||
+            'https://smak-app.pp.ua'
+          ).replace(/\/$/, '');
+
+          // Helper to parse and return the result with {{BASE_URL}} replaced by actual siteUrl
+          const buildResult = (rawContent: string) => {
+            const resolvedContent = rawContent.replaceAll('{{BASE_URL}}', siteUrl);
             if (format === 'json') {
               try {
-                return { result: { format: 'json', structure: JSON.parse(fileContent) } };
+                return { result: { format: 'json', structure: JSON.parse(resolvedContent) } };
               } catch (e) {
-                return { result: { format: 'json', raw: fileContent } };
+                return { result: { format: 'json', raw: resolvedContent } };
               }
             }
-            return { result: { format: 'markdown', content: fileContent } };
+            return { result: { format: 'markdown', content: resolvedContent } };
           };
 
-          // Priority 1: Shared Docker volume (production)
-          const volumePath = path.resolve('/site-faq', fileName);
-          if (fs.existsSync(volumePath)) {
-            const fileContent = fs.readFileSync(volumePath, 'utf8');
-            this.logger.log(`Successfully read site FAQ from shared volume: ${volumePath}`);
-            return buildResult(fileContent);
-          }
+          // Priority 1: Internal HTTP to client container (bypassing Caddy & public internet)
+          const clientBaseUrl = (
+            this.configService.get<string>('CLIENT_INTERNAL_URL') ||
+            process.env.CLIENT_INTERNAL_URL ||
+            this.configService.get<string>('FRONTEND_URL') ||
+            process.env.FRONTEND_URL
+          )?.replace(/\/$/, '');
 
-          // Priority 2: Local filesystem (development — ../client/generated/)
-          const localPath = path.resolve(process.cwd(), `../client/generated/${fileName}`);
-          if (fs.existsSync(localPath)) {
-            const fileContent = fs.readFileSync(localPath, 'utf8');
-            this.logger.log(`Successfully read site FAQ from local path: ${localPath}`);
-            return buildResult(fileContent);
-          }
-
-          // Priority 3: HTTP fetch fallback (development — from frontend URL)
-          const frontendUrl = this.configService.get<string>('FRONTEND_URL');
-          if (frontendUrl) {
-            const url = `${frontendUrl}/${fileName}`;
-            this.logger.log(`Fetching site FAQ in format "${format}" from ${url}...`);
+          if (clientBaseUrl) {
+            const url = `${clientBaseUrl}/site-faq/${fileName}`;
+            this.logger.log(`Fetching site FAQ from client at ${url}...`);
             try {
-              const response = await fetch(url);
-              if (!response.ok) {
-                throw new Error(`HTTP error! status: ${response.status}`);
+              const response = await fetch(url, { signal: AbortSignal.timeout(5000) });
+              if (response.ok) {
+                const data = await response.text();
+                this.logger.log(`Successfully fetched site FAQ over HTTP from ${url}.`);
+                return buildResult(data);
               }
-              const data = await response.text();
-              this.logger.log(`Successfully fetched site FAQ over HTTP.`);
-              return buildResult(data);
+              this.logger.warn(`Client returned HTTP ${response.status} for ${url}`);
             } catch (error) {
               this.logger.warn(`Failed to fetch FAQ via HTTP (${error.message}).`);
             }
           }
 
+          // Priority 2: Local filesystem (development — monorepo structure)
+          const localPaths = [
+            path.resolve(process.cwd(), `../client/public/site-faq/${fileName}`),
+            path.resolve(process.cwd(), `../client/generated/${fileName}`),
+            path.resolve('/site-faq', fileName),
+          ];
+
+          for (const localPath of localPaths) {
+            if (fs.existsSync(localPath)) {
+              const fileContent = fs.readFileSync(localPath, 'utf8');
+              this.logger.log(`Successfully read site FAQ from local path: ${localPath}`);
+              return buildResult(fileContent);
+            }
+          }
+
           // All sources exhausted
-          this.logger.error(`Could not retrieve site FAQ from any source (volume: ${volumePath}, local: ${localPath}).`);
+          this.logger.error(
+            `Could not retrieve site FAQ from any source (HTTP: ${clientBaseUrl}, local paths checked: ${localPaths.join(', ')}).`,
+          );
           return {
             result: {
-              error: `Could not retrieve site documentation. Checked shared volume, local filesystem, and HTTP fetch — all sources unavailable.`,
+              error: `Could not retrieve site documentation. Internal HTTP and local filesystem sources were unavailable.`,
             },
           };
         }

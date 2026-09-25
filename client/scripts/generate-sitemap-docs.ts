@@ -156,13 +156,13 @@ async function parseVueFile(filePath: string, pagesDir: string, baseUrl: string)
 
 /**
  * Main generator execution function.
- * Generates public-site-faq.md and public-site-faq.json into the generated/ directory.
+ * Generates public-site-faq.md and public-site-faq.json into the public/site-faq/ directory.
  * Admin routes (/admin/*) are excluded from the output.
  */
 export async function generateSiteDocs(projectRoot: string) {
   const pagesDir = path.join(projectRoot, 'app/pages')
-  const generatedDir = path.join(projectRoot, 'generated')
-  const baseUrl = (process.env.NUXT_PUBLIC_SITE_URL || process.env.FRONTEND_URL || (process.env.NODE_ENV === 'production' ? 'https://localhost' : 'http://localhost:3000')).replace(/\/$/, '')
+  const generatedDir = path.join(projectRoot, 'public/site-faq')
+  const baseUrl = (process.env.NUXT_PUBLIC_SITE_URL || process.env.FRONTEND_URL || '{{BASE_URL}}').replace(/\/$/, '')
   
   console.log(`[SiteFAQ] Scanning directory: ${pagesDir} (Base URL: ${baseUrl})`)
   
@@ -190,15 +190,15 @@ export async function generateSiteDocs(projectRoot: string) {
       return a.route.localeCompare(b.route)
     })
     
-    // Ensure generated folder exists
+    // Ensure public/site-faq folder exists
     await fs.mkdir(generatedDir, { recursive: true })
     
-    // 1. Write generated/public-site-faq.json
+    // 1. Write public/site-faq/public-site-faq.json
     const jsonPath = path.join(generatedDir, 'public-site-faq.json')
     await fs.writeFile(jsonPath, JSON.stringify(docsList, null, 2), 'utf-8')
     console.log(`[SiteFAQ] Successfully generated structured FAQ: ${jsonPath}`)
     
-    // 2. Write generated/public-site-faq.md (Markdown format for easy ingestion by AI)
+    // 2. Write public/site-faq/public-site-faq.md (Markdown format for easy ingestion by AI)
     let mdContent = `# Culinary Platform SMAK — Site Structure & Features Documentation\n\n`
     mdContent += `This document is automatically generated based on the source code of the site pages. It contains a complete list of routes, full URLs, page descriptions, and lists of available features. The AI assistant should use this description as a knowledge base to help users and provide direct clickable links to site pages.\n\n`
     mdContent += `## List of All Available Links (Routes)\n\n`
@@ -241,7 +241,7 @@ export async function generateSiteDocs(projectRoot: string) {
     
     // Add tips for LLM assistant
     mdContent += `## 💡 Instructions for the AI Assistant:\n\n`
-    mdContent += `1. **Navigation Assistance & Links:** When a user asks where to find a specific feature (e.g., change allergies, view recipes, pay for a subscription, or edit profile), direct them using direct clickable markdown links with Full URLs (for example: [Тарифи та підписки](${baseUrl}/billing/plans) or [Мій профіль](${baseUrl}/profile)).\n`
+    mdContent += `1. **Navigation Assistance & Links:** When a user asks where to find a specific feature (e.g., change allergies, view recipes, pay for a subscription, or edit profile), direct them using direct clickable markdown links with Full URLs (for example: [Тарифи та підписки]({{BASE_URL}}/billing/plans) or [Мій профіль]({{BASE_URL}}/profile)).\n`
     mdContent += `2. **Step-by-Step Explanations:** Use the page feature lists to tell the user exactly what they can do in each section of the site.\n`
     mdContent += `3. **Access Conditions:** Warn the user if a feature requires logging in (Middleware: \`auth\`), email confirmation (\`verified\`), or an administrator role (\`admin\`).\n`
     
