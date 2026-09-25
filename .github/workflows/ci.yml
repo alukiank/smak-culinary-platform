@@ -94,14 +94,17 @@ jobs:
             git fetch origin main
             git reset --hard origin/main
 
+            echo "Ensuring .env symlink to .env.prod..."
+            [ -f .env.prod ] && ln -sf .env.prod .env
+
             echo "Logging in to GitHub Container Registry..."
             echo "${{ secrets.GITHUB_TOKEN }}" | docker login ghcr.io -u ${{ github.actor }} --password-stdin
 
             echo "Pulling latest Docker images..."
-            docker compose -f docker-compose.prod.yml pull
+            docker compose --env-file .env.prod -f docker-compose.prod.yml pull
 
             echo "Starting / updating containers..."
-            docker compose -f docker-compose.prod.yml up -d --remove-orphans
+            docker compose --env-file .env.prod -f docker-compose.prod.yml up -d --remove-orphans
 
             echo "Pruning unused Docker images..."
             docker image prune -f
